@@ -1,0 +1,58 @@
+							
+							
+							{
+     					    	xtype:'datefield',fieldLabel:'名称',width:300,labelWidth:100,
+     					    	labelAlign:'left',name:'isoCode',margin:'5 0 5 15',
+     					    		 triggers:{
+     					    			foo:{
+     					    				cls:'x-form-clear-trigger',
+     					    				handler:function(e){
+     					    			    	var me = this;
+     					    			    	me.setValue('');
+     					    			    },
+     					    	            scope: 'this'
+     					    			}
+     					    		}
+     						}
+							
+							
+							亲自试验了，foo那里必须要有  但是可以随意换成任何的字母  function 可以  aaa 也可以  （Extjs3 和Extjs4 不支持，用下面的方法，
+							但是是直接替换掉那个日历图标有局限性）
+							
+							
+			var aa = Ext.create('Ext.form.field.Trigger', {
+	 	        labelAlign : 'right',
+	 	        fieldLabel : '测试',
+	 	        margin : '10 0 0 0',
+	 	        triggerCls : 'x-form-clear-trigger',
+	 	        onTriggerClick : function(e) {
+	 	            
+	 	        }
+	 	    });
+
+
+Ext 5.0.1  具体例子
+							{
+									xtype:'combo',fieldLabel:'合作伙伴',//width:300,labelWidth:50,
+									labelAlign:'left',name:'partner',margin:'5 0 5 15',
+									store:me.partenerStore,
+									listConfig:{maxHeight:150},editable:false,
+									displayField: 'partner', valueField: 'id',
+									queryMode: 'local',triggerAction: 'all',emptyText:'请选择...',
+									triggers:{
+										foo:{
+											cls:'x-form-clear-trigger',
+											hidden:true,//默认进来的时候是不显示的
+											handler:function(e){
+												this.setValue('');
+												this.triggers.foo.hide();//清空了以后 隐藏这个按钮
+											},
+											scope: 'this'
+										}
+									},
+									listeners:{
+										select:function(combo,record){
+											this.triggers.foo.show();//选中某条记录以后，显示清空按钮
+										}
+									}
+								}

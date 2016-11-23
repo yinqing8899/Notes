@@ -1,0 +1,31 @@
+					listeners:{
+								   select:function(combo, record, index){
+								   	   var choiceId = record.get('choiceId');
+								   	   var combo_ = me.down('gridpanel[name=choice_names]');
+								   	   var select_model = combo_.getSelectionModel();
+								   	   var store_ = combo_.getStore();
+								   	   store_.load({
+								   		   	params: {
+								   		   		pvid:Ext.getCmp('pv_Id').getValue(),
+								   		   		choiceId:choiceId
+											},    //²ÎÊý
+									        callback: function(records, options, success){ 
+									        	   var models = [];
+												   try{
+													   for(var i=0;i<records.length;i++){
+														   var record = records[i];
+														   if(record.get('included')=='1'){
+															   models.push(record);
+														   }
+													   }
+													   if(models.length!=0){
+														   select_model.select(models);
+													   }
+												   }catch(e){}
+									       
+									        },
+									        scope: store_, 
+									        add:false
+								   	   });
+							   	   }
+							   }

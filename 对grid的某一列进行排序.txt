@@ -1,0 +1,25 @@
+	
+	//对列的排序。。。。在store里，增加一个属性  sorters:[]，具体内容如下：
+	
+	initStore:function(){
+		var me=this;
+		me.optStore=Ext.create('Ext.data.Store',{
+			fields:["choiceValueId","choiceId","choiceValue","choiceCode","choiceValueName","choiceOrder"],
+			sorters : [{
+		        property : 'choiceOrder', // 指定要排序的列索引
+		        direction : 'ASC' // DESC：降序，  ASC：增序
+		    }],
+			proxy:{
+				url:ctx+'/choiceValue/getChoiceValuesByChoiceId.action',
+				type:'ajax',
+				reader:{
+					type:'json',
+					successProperty:'success',
+					rootProperty:'results',
+					totalProperty:'totalCount'
+				}
+			},
+			autoLoad:true
+		})
+		
+	}

@@ -1,0 +1,55 @@
+	init:function(){
+			var me = this;
+			me.control({
+						
+						'cityDefView > gridpanel[name=infoView]':{
+							itemcontextmenu:me.itemcontextmenuFn
+						}
+					})
+		
+		}
+		
+	itemcontextmenuFn:function(view,record,item,index,e){
+		var me = this;
+		console.log(e);
+		var contextmenu = new Ext.menu.Menu({  
+	        id:'theContextMenu',  
+	        items:[{  
+	            text:'查看详情',  
+	            handler:function(){  
+	                Ext.Msg.alert("系统提示","测试");  
+	            }  
+	        },
+	        {  
+	            text:'查看fff',  
+	            handler:function(){  
+	                Ext.Msg.alert("系统提示","测试");  
+	            }  
+	        }]  
+	    });
+		 e.preventDefault();  
+         contextmenu.showAt(e.getXY());  
+	},
+	
+	
+	给panel 的右上角加图标
+	用
+	tools: [{
+        type: 'help',
+        handler: function(){
+            // 此处显示帮助的逻辑
+        }
+    }, {
+        itemId: 'refresh',
+        type: 'refresh',
+        hidden: true,
+        handler: function(){
+            // 实现刷新的逻辑
+        }
+    }, {
+        type: 'search',
+        handler: function(event, target, owner, tool){
+            // 实现查询的逻辑
+            owner.child('#refresh').show();
+        }
+    }]

@@ -1,0 +1,53 @@
+ _compareLeftRight:function(){
+    	var me = this;
+    	var assettype = me.down('combo[name=assettype]');
+    	var tfReal = me.down('combo[name=tfReal]');
+    	var abstractInfo = me.down('textarea[name=abstractInfo]');
+    	var assettype_left = me.down('combo[name=assettype_left]');
+    	var tfReal_left = me.down('combo[name=tfReal_left]');
+    	var abstractInfo_left = me.down('textarea[name=abstractInfo_left]');
+    	var redStyle={background:'#FFCCCC'};
+    	var whiteStyle={background:'white'};
+    	if(assettype_left.getValue()!=null&&assettype.getValue()!=assettype_left.getValue()){
+    		assettype_left.setFieldStyle(redStyle);
+    	}else {
+    		assettype_left.setFieldStyle(whiteStyle);
+    	}
+    	if(tfReal_left.getValue()!=null&&tfReal.getValue()!=tfReal_left.getValue()){
+    		tfReal_left.setFieldStyle(redStyle);
+    	}else {
+    		tfReal_left.setFieldStyle(whiteStyle);
+    	}
+    	if(abstractInfo_left.getValue()!=null&&abstractInfo.getValue()!=abstractInfo_left.getValue()){
+    		abstractInfo_left.setFieldStyle(redStyle);
+    	}else {
+    		abstractInfo_left.setFieldStyle(whiteStyle);
+    	}
+    	/**compare grid list**/
+    	for(var i=0;i<me.leftGridStore.getCount();i++){
+    		var record = me.leftGridStore.getAt(i);
+    		var keyId = record.get('keyId');
+			var assetcode = record.get('assetcode');
+			var shortname = record.get('shortname');
+			var markettype = record.get('markettype');
+			var flag = false;
+    		for(var j=0;j<me.gridStore.getCount();j++){
+    			var record2 = me.gridStore.getAt(j);
+    			var csetDataMaintain = record2.get('csetDataMaintain');
+    			if(!csetDataMaintain){
+    				continue;
+    			}
+    			if(keyId==csetDataMaintain.dmOriid||record2.get('keyId')==keyId){
+    				if(assetcode+'__compare__'+shortname+markettype!=record2.get('assetcode')+'__compare__'+record2.get('shortname')+record2.get('markettype')){
+    					record.set('_compare','not_pass');
+    				}else {
+    					record.set('_compare','pass');
+    				}
+    				flag = true;
+    			}
+    		}
+    		if(!flag){
+    			record.set('_compare','not_pass');
+    		}
+    	}
+    }

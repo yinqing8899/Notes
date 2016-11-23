@@ -1,0 +1,39 @@
+
+
+
+// 下面是一个radiogroup，从前台根据一个parentId 是否为空，来控制radiogroup在编辑界面的显示，
+ {xtype:'radiogroup',anchor:'95%',fieldLabel:'<span style="color:red;">*</span>是否级联',name:'cascade_name',
+							  maxLength:'100',allowBlank:false,margin:'10 5 5 15',
+							  items:[
+								  {boxLabel:'是',inputValue:'Y',name:'primarykeyflag',readOnly:true},
+								  {boxLabel:'否',inputValue:'N',name:'primarykeyflag',readOnly:true}
+							  ],
+	        		       listeners:{
+	        		    	   change:function( this1, newValue, oldValue, eOpts ){
+	        		    		   var _value = newValue.primarykeyflag;
+	        		    		   if(_value=='Y'){
+	        		    			   Ext.getCmp('key_ids').setVisible(true);
+	        		    			   Ext.getCmp('key_ids_id').setVisible(true);
+	        		    			   Ext.getCmp('choicekey_id').setDisabled(true);
+	        		    		   }
+	        		    		   else{
+	        		    			   Ext.getCmp('key_ids').setVisible(false);
+	        		    			   Ext.getCmp('key_ids_id').setVisible(false);
+	        		    			   Ext.getCmp('choicekey_id').setDisabled(false);
+	        		    		   }
+	        		    	   }
+	        		       }
+        	    	  }
+
+
+						
+						if(me.passedObj.data.parentId){
+        					me.down('radiogroup[name=cascade_name]').setValue({primarykeyflag:'Y'});
+        					var str = me.passedObj.data.choiceKey;
+        					var code = str.substring(str.indexOf('_')+1);
+							//此处，截取最后两位，还可以这样写:
+							//var code2=str.substring(str.length-2,str.length);
+        					me.down('combo[name=choiceCode]').setValue(code);
+        				}else {
+        					me.down('radiogroup[name=cascade_name]').setValue({primarykeyflag:'N'});
+        				}

@@ -1,0 +1,5 @@
+如果 不加 me.callParent(arguments);
+
+浏览器会报Uncaught TypeError: Cannot read property 'insert' of null  这个错
+
+uncaught syntaxerror : unexpected token :  该错误是这一行有一个标识错误，为 冒号，通常，这个错误就是属于标点符号的错误

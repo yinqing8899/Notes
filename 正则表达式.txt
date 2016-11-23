@@ -1,0 +1,27 @@
+ {
+	xtype:'textfield',
+	id:'group_gui_id_t',
+	width:'90%',
+	style:{marginRight:'15px'},
+	grow:false,//大小是否可变
+	emptyText:'请输入团号...',
+	enableKeyEvents:true,
+	listeners:{
+		keyup:function(src,evt){
+			var str = evt.target.value;
+			str = str.replace(/[^a-z\-0-9]/ig,'');
+			Ext.getCmp('group_gui_id_t').setValue(str);
+			var factoryId= Ext.getCmp('group_gui_id_t').getValue();
+			var length = factoryId.length;
+			if(length>25){
+				Ext.getCmp('group_gui_id_t').setValue(factoryId.substring(0,25));
+			}
+		}
+	}
+}
+只能输入字母（不分大小写）和中文//i 就是不分大小写
+var str = evt.target.value;
+str = str.replace(/[^a-z\u4e00-\u9fa5]/ig,'');
+
+只能输入数字和字母（不分大小写）
+str = str.replace(/[^a-z\-0-9]/ig,'');

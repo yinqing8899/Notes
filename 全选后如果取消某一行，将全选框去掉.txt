@@ -1,0 +1,29 @@
+
+
+function autoCheckGridHead(grid){  
+	  var hd_checker = grid.getEl().select('div.x-grid3-hd-checker');    
+	  
+	     var hd = hd_checker.first();   
+	     if(hd != null){   
+	      if(grid.getSelectionModel().getSelections().length !=   
+	  
+	                grid.getStore().getCount()){   
+	                //清空表格头的checkBox    
+	                if(hd.hasClass('x-grid3-hd-checker-on')){  
+	                 hd.removeClass('x-grid3-hd-checker-on');     //x-grid3-hd-checker-on  
+	                 //grid.getSelectionModel().clearSelections();  
+	             }  
+	            }else{  
+	             if(grid.getStore().getCount() == 0){ //没有记录的话清空;  
+	              return;  
+	             }  
+	             hd.addClass('x-grid3-hd-checker-on');  
+	                grid.getSelectionModel().selectAll();  
+	            }  
+	        }  
+	 } 
+
+//给grid加一个监听，调用 autoCheckGridHead方法
+Ext.getCmp('guide_person_table').addListener('cellclick',function(grid, rowIndex, columnIndex, e){
+        	 autoCheckGridHead(grid);
+        });

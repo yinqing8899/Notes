@@ -1,0 +1,90 @@
+var task_CheckLoginState;//声明任务变量
+Ext.onReady(function(){
+    task_CheckLoginState = {
+        run: checkLogin,//执行任务时执行的函数
+        interval: 10000//任务间隔，毫秒为单位，这里是10秒
+    }
+    Ext.TaskMgr.start(task_CheckLoginState);//初始化时就启动任务
+});
+ 
+function showlogin() {
+    //显示登录界面
+}
+ 
+//检查登录状态的函数
+function checkLogin(){
+    Ext.Ajax.request({
+        url: 'login.php',//执行登录状态检查的程序
+        disableCaching: true,//是否禁用缓存,当然要禁用
+        timeout: 10000,//最大等待时间,超出则会触发超时
+        success: function(response, option){//ajax请求发送成功时执行
+            if (!response || response.responseText == '') {//返回的内容为空,即服务器停止响应时
+                Ext.TaskMgr.stop(task_CheckLoginState);
+                Ext.MessageBox.show({
+                    title: '错误',
+                    msg: '在检测您的登录状态时发生错误，请稍候再次进行登录。',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.MessageBox.ERROR,
+                    fn: function(btn, text){
+                        if (btn == 'ok') {
+                            showlogin();//显示登录界面
+                        }
+                    }
+                });
+                return;
+            } else {
+                result = Ext.decode(response.responseText);
+                if (result.success == 'true') {//success是ext用来判断访问url是否成功的依据
+                    if (result.state == 'true') {//state是自定义的返回值,用来标识登录状态是否有效
+                        return true;
+                    } else {//登录状态失效
+                        Ext.TaskMgr.stop(task_CheckLoginState);
+                        Ext.MessageBox.show({
+                            title: '登录检测',
+                            msg: '您已经长时间未操作或已经退出登录，请重新登录。',
+                            buttons: Ext.Msg.OK,
+                            icon: Ext.MessageBox.INFO,
+                            fn: function(btn, text){
+                                if (btn == 'ok') {
+                                    showlogin();//显示登陆界面
+                                }
+                            }
+                        });
+                        return false;
+                    }
+                } else {//success的返回结果不是true,这种情况很少发生
+                    Ext.TaskMgr.stop(task_CheckLoginState);
+                    Ext.MessageBox.show({
+                    title: '错误',
+                    msg: '在检测您的登录状态时发生网络错误，请确认您已经链接网络后再次进行登录。',
+                    buttons: Ext.Msg.OK,
+                    icon: Ext.MessageBox.ERROR,
+                    fn: function(btn, text){
+                        if (btn == 'ok') {
+                            showlogin();//显示登陆界面
+                        }
+                    }
+                    });
+                }
+            }
+        },
+        failure: function(data){//ajax请求发送失败或超时
+            Ext.TaskMgr.stop(task_CheckLoginState);
+            Ext.MessageBox.show({
+            title: '错误',
+            msg: '在检测您的登录状态时发生网络错误，请确认您已经链接网络后再次进行登录。',
+            buttons: Ext.Msg.OK,
+            icon: Ext.MessageBox.ERROR,
+            fn: function(btn, text){
+                if (btn == 'ok') {
+                    showlogin();//显示登录界面
+                }
+            }
+            });
+        },
+        params: {
+            act: 'check'
+        }
+    });
+    return true;
+}

@@ -1,0 +1,153 @@
+
+Ext.define('app.portal_test.chartzheone', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.LPortalChartZheOne',
+    id:'ChartZheOneId',
+    layout: 'fit',
+    title:'温度曲线图',
+
+
+    initComponent: function () {
+
+        var str1 = 111;
+        var arr = [];
+        var arr0 = [];
+        var hidText =  Ext.create("Ext.form.TextField",{
+            id:"hidText_id",
+            hidden:false
+        });
+        var addCharts = Ext.create('Ext.Button', {
+            text: '增加曲线图',
+            id: 'addPortal_Chart'
+            //iconCls: 'fa fa-search fa-lblue',
+            //handler: function() {
+            //    var str2 = hidText.getValue();
+            //    arr.push(str2.split(','));
+            //    Ext.Array.include(arr,"time");
+            //    arr0 = Ext.Array.flatten(arr);
+            //    console.log(arr0);
+            //
+            //}
+
+        });
+
+        //=======================================================
+        //var myFields = [];
+        //Ext.Ajax.request({
+        //    url: '/javaData/EnergyAnalysis/SummaryChart/getTempGraphData',  //这里 你让他给你一个接口，能够查到所有第六级的id
+        //    method: "POST",
+        //    async: false,
+        //    params: {},
+        //    success: function(response, opts) {
+        //        var result = Ext.decode(response.responseText);
+        //        myFields.push(result.data.id);//这里你先console.log(result);看一下id 是不是在data下，拿到id push到上面定义的myFields里
+        //    }, //请求成功的回调函数
+        //    failure: function() {  }  // 请求失败的回调函数
+        //});
+        //-------------------------------------------------------
+
+
+
+        var store_zhe1 = Ext.create('Ext.data.Store', {
+            //fields: [
+            //    { name: 'time' },
+            //    { name: '23529'},
+            //    {name:'23488'}
+            //],
+
+            //fields:[ 'time','23488','23529'],
+            fields:[],
+            data:[],
+            //proxy: {
+            //    type: 'ajax',
+            //    url: '/javaData/EnergyAnalysis/SummaryChart/getTempGraphData',
+            //    reader: {
+            //        type: 'json',
+            //        root: 'data',
+            //        totalProperty: 'totalCount'
+            //    }
+            //},
+            autoLoad: false
+
+
+            /*listeners:{
+             beforeload:function(){
+
+             },
+             load:function(groupName_store){
+             Ext.Ajax.request({
+             //url: '/javaData/EnergyAnalysis/getTest',
+             url: '/javaData/EnergyAnalysis/SummaryChart/getTempGraphData',
+             method: "GET",
+             async: false,
+             success: function (response, opts) {  //请求成功的回调函数
+             alert('请求成功');
+             var respText = Ext.decode(response.responseText);
+             newff = respText;
+             console.log(newff);
+
+             },
+             failure: function () { // 请求失败的回调函数
+             alert('请求失败');
+             }
+             });
+
+             }
+             }*/
+
+        });
+
+        var zhe1 = Ext.create('Ext.chart.Chart', {
+            //title:'第一个这线图标题',
+            width: 500,
+            height: 280,
+            id:'store_zhe1_Id',
+            animate: true,
+            store: store_zhe1,
+            axes: [
+                {
+                    type: 'Numeric',
+                    position: 'left',
+                    //fields: ['23364','23363','23365'],
+                    label: {
+                        renderer: Ext.util.Format.numberRenderer('0,0')
+                    },
+                    title: '纵坐标轴',
+                    grid: true,
+                    minimum: 0
+                },
+                {
+                    type: 'Time',
+                    position: 'bottom',
+                    fields: 'time',
+                    title: ['一','二','三','四','五'],
+                    step: [Ext.Date.MINUTE, 300],    //时间轴，坐标点，步进距离
+
+                    dateFormat: 'Y-m-d H:i',
+                    label: {
+                        rotate: {
+                            degrees: 300
+                        }
+                        //,
+                        //renderer:function(val){
+                        //    if(val == time1||val == time2){
+                        //        return val
+                        //    }else{
+                        //        return ""
+                        //    }
+                        //}
+                    }
+                }
+            ],
+            series: []
+        });
+
+        Ext.apply(this,{
+            tbar:[hidText,addCharts],
+
+            items:[zhe1]
+
+        });
+        this.callParent();
+    }
+})

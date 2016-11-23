@@ -1,0 +1,12 @@
+{xtype:'textfield',anchor:'95%',fieldLabel:'<span style="color:red;">*</span>选项Key',name:'choiceKey',margin:'10 5 5 15',maxLength:'100',disabled:true},
+
+{xtype:'textfield',anchor:'95%',fieldLabel:'<span style="color:red;">*</span>助记符',name:'choiceCode',margin:'10 5 5 15',maxLength:'100',
+							regex:/^[0-9]{2}$/,regexText:'必须输入两位数字',maxLength:2, enforceMaxLength:true,allowBlank:false},
+							
+{xtype:'textfield',anchor:'95%',fieldLabel:'<span style="color:red;">*</span>定义值(Value)',name:'choiceValue',margin:'10 5 5 15',maxLength:'100',
+							regex:/^[u4E00-u9FA5]+$/, regexText: '该文本框不能输入中文',allowBlank:false},
+							
+{xtype:'textfield',anchor:'95%',fieldLabel:'<span style="color:red;">*</span>名称',name:'choiceValueName',margin:'10 5 5 15',maxLength:'100',allowBlank:false},
+
+{xtype:'textfield',anchor:'95%',fieldLabel:'<span style="color:red;">*</span>显示顺序',name:'choiceOrder',margin:'10 5 5 15',maxLength:'100',
+							regex:/^[0-9]*$/,regexText:'只能输入数字',allowBlank:false}

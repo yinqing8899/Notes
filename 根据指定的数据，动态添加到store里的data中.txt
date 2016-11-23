@@ -1,0 +1,12 @@
+	var aa = "aa-bb;cc-dd;ee-ff;hh-ii";
+		var datas = [];
+		var bb = aa.split(";");
+		for(var i=0;i<bb.length;i++){
+			datas.push(bb[i]);
+			//var temp_ = bb[i].split('-');
+			datas.push({key:bb[i],value:bb[i]});
+		}
+		me.testStore = Ext.create('Ext.data.Store',{
+			 fields:['key','value'],
+			 data:datas
+		});

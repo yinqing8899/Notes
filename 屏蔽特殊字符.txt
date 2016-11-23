@@ -1,0 +1,72 @@
+禁止输入汉字：
+<input TYPE="text" NAME="textfield" STYLE="width:400px; ime-mode:disabled" VALUE=""></INPUT><br />
+重点是ime-mode:disabled
+屏蔽特殊字符
+				//特殊字符
+						var allSpacialValue  =['~','!','@','#','$','%','^','&','*','(',')','_','+','|','[',']',';',
+                              '{','}',':','"','<','>','?','`','·','！','￥','%','……','（','）',
+                              '-','=','【','】','、','；','’','，','。','？','“','”','‘','\'',',','.','/','\\'
+                              ]  ;
+
+								{
+									xtype:'textfield',
+									fieldLabel: '&nbsp&nbsp&nbsp&nbsp&nbsp;真实姓名',
+									name:'name',
+									anchor:'92%',
+									id:'system_user_mgs_truename_id',
+									enableKeyEvents:true,
+									listeners:{
+				                     	keyup:function(src,evt){
+				                         	var str = evt.target.value;
+				                         	var newStr = str.substring(str.length-1);
+				                         	var index = allSpacialValue.indexOf(newStr);
+				                         	if (index!='-1'){
+				                         		var oldValue = Ext.getCmp('system_user_mgs_truename_id').getValue();
+				                         		var newValue = oldValue.substring(0,oldValue.length-1);
+				                         		Ext.getCmp('system_user_mgs_truename_id').setValue(newValue);
+				                         	}else{
+				                         		var factoryId= Ext.getCmp('system_user_mgs_truename_id').getValue();
+				                         		var length = factoryId.length;
+				                         		if(length>16){
+				                         			Ext.getCmp('system_user_mgs_truename_id').setValue(factoryId.substring(0,16));
+				                         		}
+				                         	}
+				                 		} 
+				                     }
+								}
+
+var tf= new Ext.form.TextField({
+  });
+
+tf.on('render',function(){
+   tf.getEl().on('keyup',function(event){//因为有时候直接注册keyup事件注册不上所以要注册到El上
+     var v = tf.getValue();
+     v = v.replace(';','');//去掉你不想要的字符串
+     tf.setValue(v);
+    },this);
+  },this,{single:true});
+  
+								//屏蔽字母 特殊字符，空格和退格能用（汉字屏蔽不了）
+								keydown:function(src,evt){
+                                     	  				if(evt.keyCode != 8 && evt.keyCode != 13 && (evt.keyCode <47 || evt.keyCode>57 )) {
+                                     	  					evt.stopEvent();
+                                     	  				} else {
+                                     	  					evt.setEvent(evt);
+                                     	  				}
+			                                      	}
+											//汉字也能屏蔽，但是只能一次屏蔽一个汉字，如果几个汉字打好后再按空格，那就会有问题
+											keyup:function(src,evt){
+	                                        	  	    var str = evt.target.value;
+			                                            var lengths = str.length;
+			                                          	var newStr = str.substring(str.length-1);
+			                                          	var index = 0;
+			                                          	if(lengths==0){
+			                                          		index ==0
+			                                          	}else{
+			                                          		index = keyValue.indexOf(newStr);
+			                                          		if(index<=0&&evt.keyCode != 8 && evt.keyCode != 13){
+			                                          			newValue = str.substring(0,str.indexOf(newStr));
+			                                          			src.setValue(newValue)
+			                                          		}else{evt.setEvent(evt);}
+			                                          	}
+			                                          }

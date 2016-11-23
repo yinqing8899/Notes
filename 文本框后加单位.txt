@@ -1,0 +1,18 @@
+					 		{
+						                	xtype:'textfield',
+						                	fieldLabel:'<span style="color:red">*</span>时长单价',
+						                	name:'',
+						                	width:161.2,
+						                	style:'margin-left:25px',
+						                	id:'time_openWin_timePrice',
+						                	listeners:{
+						                	
+								                render : function(obj) {  
+						                                            var font = document.createElement("font");  
+						                                            font.setAttribute("color","black");  
+						                                            var redStar = document.createTextNode(' 元/分');  
+						                                            font.appendChild(redStar);  
+						                                            obj.el.dom.parentNode.appendChild(font);  
+						                                        }  
+								}
+						                }

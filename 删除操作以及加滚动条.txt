@@ -1,0 +1,38 @@
+function delMenusInfo(view, rec, item, index, e){
+    Ext.Msg.confirm('系统提示', '您的确定要删除吗？',showResult); 
+		 function showResult(btn){ 
+		 	//确定要删除
+		 	if (btn == 'yes') 
+			{  				 
+				 // AJAX提交方式
+		         Ext.Ajax.request({
+					url : ctx+'/menu/deleteMenuInfoById.action',					
+					method : "POST",
+					// 提交参数
+					params : {
+						paramsId : rec.raw.treeid 	
+					},
+					success:function(response) {	
+						var result =  Ext.JSON.decode(response.responseText); 
+						if(result.flag ==true){   
+							reFreshDg("MenuTreePanel_Id");
+							Ext.getCmp("menufrompanel_id").getForm().reset();
+							MsgTip.msg('ok', "【<font color=blue>成功删除</font>】，数据信息。");						 	    
+						}
+					 	if(result.flag ==false){		 		 
+					 		MsgTip.msg('info', "<font color=red>SORRY！</font>删除失败。");
+					 	}
+					 	 
+					},
+					failure : function() {
+						    Ext.Msg.alert("提示", "【<font color=red>异常抛出 </font>】：请与管理员联系！");							    
+					}
+				});
+			}
+		 } 
+  	return false;
+  }
+  
+  
+	autoscroll:true,
+	bodyStyle : 'overflow-x:hidden; overflow-y:scroll',

@@ -1,0 +1,24 @@
+ var root1 = new Ext.tree.AsyncTreeNode({
+            expanded:true,
+            draggable:false
+        });
+        var loader = new Ext.tree.TreeLoader({dataUrl:'../eto/js/manager/authorityData.json'});
+        
+    	var menuTree = new Ext.tree.TreePanel({
+			 	bodyStyle:'background-color:#F2FAFD;',
+			    width: '100%',
+			    rootVisible: false,	//这是跟节点，true的时候显示，false为不显示
+			    height: 500,
+			    id:'sys_treepanel_id',
+			    useArrows: true,
+			    root:root1,
+			    loader:loader
+		});
+		
+		
+		/////////////////
+												//下面是插入数据后，刷新页面用的
+                                          		var sys_tree = Ext.getCmp('sys_treepanel_id');
+                                          		sys_tree.loader.dataUrl = '../eto/js/manager/NodeTree.json';
+                                          		var rt = sys_tree.root;
+                                          		rt.reload();

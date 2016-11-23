@@ -1,0 +1,381 @@
+/**
+ *产品管理->字段组和库表定义
+ *字段组和库表定义新增
+ *yinqing 2015-02-11 
+ **/
+Ext.define("Eveimi.view.productMgr.ProDefAddWin",{
+	extend:'Ext.window.Window',
+	title:'字段组和库表定义新增',
+	width:790,height:500,modal:true,resizable:false,
+	alias : 'widget.proDefAddWin',	 
+	border:false,
+	caller:null,layout:'fit',
+	initComponent: function() {
+		var me = this;
+		 Ext.define('Employee', {  
+		        extend: 'Ext.data.Model',  
+		        fields: [  
+		           {name: 'columnName'},
+		           {name: 'classAttrName'},
+		           {name: 'readonly',type: 'bool'},
+		           {name: 'primarykeyflag',type: 'bool'},
+		           {name: 'compositeKeyFlag',type: 'bool'},
+		           {name: 'foreignkeyflag',type: 'bool'},
+		           {name: 'fkLink'}
+		        ]
+		    }); 
+		 var _store = Ext.create('Ext.data.Store', {
+		        autoDestroy: true,
+		        editable:true,
+		        model: 'Employee',
+		        proxy: {
+		            type: 'memory'
+		        },
+		        sorters: [{
+		            property: 'start',
+		            direction: 'ASC'
+		        }]
+		    });
+		 var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+		        clicksToMoveEditor: 1,
+		        autoCancel: false
+		    });
+		
+		 var sm = Ext.create('Ext.selection.CheckboxModel',{});
+        me.initStore();
+        Ext.apply(me,{
+        	items:[
+        	    {xtype:'form',anchor:'100%',
+        	    	items:[ {xtype:'form',anchor:'100%',layout:{
+        	    		 type:'table',
+        	    		 columns:2
+        	    		 },
+        	    		items:[{xtype:'combo',anchor:'95%',fieldLabel:'<span style="color:red;">*</span>选择产品',name:'productId',maxLength:'100',
+							allowBlank:false,margin:'10 5 0 10',
+							store: Ext.create('Ext.data.Store',{
+						    	 fields:['productid','name'],
+						    	 proxy: {
+					    			url: ctx+'/productDef/getAllProductDefs.action',
+						            type: 'ajax',
+						            reader: {
+						                type: 'json',
+						                successProperty: 'success',
+						                rootProperty: 'results',
+						                totalProperty : 'totalCount'
+						            }
+						        },
+						        autoLoad: true
+						   }),editable:false,
+						   queryMode: 'local',displayField: 'name',columnWidth:.3,
+						   valueField: 'productid',emptyText:'请选择产品',
+						   listConfig:{maxHeight:150},
+						   listeners:{
+							   select:function(combo, record, index){
+							   	   var productid = record.get('productid');
+							   	   //var combo_ = me.down('combo[name=version]');
+							   	   var combo_ = Ext.getCmp('ve_ids');
+							   	   var store_ = combo_.getStore();
+							   	   store_.load({
+							   		   	params: {
+							   		   		productId:productid
+										},    //参数
+								        callback: function(records, options, success){ 
+	//							                  Ext.Msg.alert('info', '加载完毕');
+								        },
+								        scope: store_, 
+								        add:false
+							   	   });
+						   	   }
+						   }
+						   
+					},
+					{xtype:'combo',anchor:'95%',fieldLabel:'<span style="color:red;">*</span>选择版本',name:'version',
+						id:'ve_ids',maxLength:'100',
+						allowBlank:false,margin:'10 5 0 150',
+							store: Ext.create('Ext.data.Store',{
+								fields:['pvid','version'],
+								proxy: {
+					    			url: ctx+'/productDef/getVersionsByProductId.action',
+						            type: 'ajax',
+						            reader: {
+						                type: 'json',
+						                successProperty: 'success',
+						                rootProperty: 'results',
+						                totalProperty : 'totalCount'
+						            }
+								},
+								autoLoad: true
+							}),editable:false,
+					   queryMode: 'local',displayField: 'version',columnWidth:.3,
+					   valueField: 'pvid',emptyText:'请选择版本',
+					   listConfig:{maxHeight:150}
+					,
+					   listeners:{
+						   select:function(combo, record, index){
+							   var pvid = record.get('pvid');
+							 //  var combo_ = me.down('combo[name=fkLink]');
+							   var combo_ = Ext.getCmp('fkLink_ids');
+							   var store_ = me.proStore;
+							   store_.load({
+							   		params: {
+						   		   		versionId:pvid,
+						   		   		type:'Y'
+						   		   		},    //参数
+							        callback: function(records, options, success){ 
+//							                  Ext.Msg.alert('info', '加载完毕');
+							        },
+							        scope: store_, 
+							        add:false
+							   	   });
+						   }
+					   }
+					},
+					{xtype:'radiogroup',fieldLabel:'<span style="color:red;">*</span>是否字段组',name:'groupflag',allowBlank:false,margin:'10 5 0 10',
+						items:[
+						       {boxLabel:'是',inputValue:"Y",name:'groupflag'},
+						       {boxLabel:'否',inputValue:"N",name:'groupflag',margin:'0 0 0 80',}
+						       ]
+					},
+    	    	    {xtype:'textfield',anchor:'95%',fieldLabel:'<span style="color:red;">*</span>前缀名',name:'prefix',
+    	    	    	   id:'prefix_ids',maxLength:'100',margin:'10 5 0 150'
+    	    	    },
+    	    	    {xtype:'textfield',id:'_hiddenid_one',hidden:true},
+    	    	    {xtype:'textfield',id:'_hiddenid_two',hidden:true},
+    	    	    {xtype:'textfield',id:'_hiddenid_three',hidden:true},
+    	    	    {xtype:'textfield',id:'_hiddenid_four',hidden:true},
+    	    	    {xtype:'textfield',id:'_hiddenid_five',hidden:true},
+    	    	    {xtype:'textfield',id:'_hiddenid_six',hidden:true},
+    	    	    {xtype:'textfield',id:'_hiddenid_seven',hidden:true},
+    	    	    {xtype:'textfield',anchor:'95%',fieldLabel:'<span style="color:red;">*</span>对象类名',name:'className',
+    	    	    	maxLength:'100',allowBlank:false,margin:'10 5 0 10',regex:/^[A-Z][a-zA-Z_]{0,}$/,regexText:'只能输入字母，且首字母需大写'
+    	    	    },
+					{xtype:'textfield',anchor:'95%',fieldLabel:'<span style="color:red;">*</span>表/字段组名',name:'name',
+						maxLength:'100',allowBlank:false,margin:'10 5 0 150'
+					},
+					{xtype:'textfield',anchor:'95%',fieldLabel:'<span style="color:red;">*</span>类包名',name:'domainPath',
+						maxLength:'100',allowBlank:false,margin:'10 5 0 10',regex:/^[a-zA-Z][a-zA-Z_\/]{0,}$/,regexText:'只能是字母或下划线组合，且第一位只能是字母'
+					},
+					{xtype:'textarea',anchor:'95%',fieldLabel:'<span style="color:red;">*</span>说明',name:'remark',
+						allowBlank:false,margin:'10 5 5 150'
+					}]
+        	    			}
+        	    	       ,
+						{xtype:'fieldcontainer',layout:"hbox" , 
+							items:[
+							{
+							    xtype: 'label',
+							    text: '字段',
+							    width:"108",
+							    style:"padding-left:13px;padding-top:10px;"
+							},
+								{xtype:'gridpanel',anchor:'95%',flex:1,id:"proDefAdd_ids",name:'subL_name',height:230,width:'790',margin:'10 5 0 10',
+									store:_store,
+									selModel: sm,
+									autoscroll:true,
+									bodyStyle : 'overflowX:autoScroll; overflowY:auto',
+									 plugins:[  
+								                 Ext.create('Ext.grid.plugin.CellEditing',{  
+								                     clicksToEdit:1 //设置单击单元格编辑  
+								                 })  
+								        ], 
+									columns: [
+										{ text:"字段名",dataIndex: 'columnName',flex:2,
+											editor:{  
+												xtype:'textfield',anchor:'95%',name:'columnName',
+												maxLength:'100',allowBlank:false, 
+							                }
+										},
+										{ text:"对象属性名",dataIndex: 'classAttrName',flex:2,
+											editor: {xtype:'textfield',anchor:'95%',name:'classAttrName',
+					        	    	    	maxLength:'100',allowBlank:false
+											}
+										},
+										{ xtype: 'checkcolumn',text:"只读",dataIndex: 'readonly',flex:1,
+											renderer:function(val, m, rec,selected) {  
+										　　　　　　　　if (rec.get('readonly') == false)
+														return '<input type="checkbox" value="checkbox">';
+										             else{                 
+										                return (new Ext.grid.column.CheckColumn).renderer(val);
+										             }
+													return ;
+										         }
+										},
+										{ xtype: 'checkcolumn',text:"主键",dataIndex: 'primarykeyflag',flex:1,
+											renderer:function(val, m, rec,selected) {  
+										　　　　　　　　if (rec.get('primarykeyflag') == false)
+														return '<input type="checkbox" value="checkbox">';
+										             else{                 
+										                return (new Ext.grid.column.CheckColumn).renderer(val);
+										             }
+													return ;
+										         }
+										},
+										{ xtype: 'checkcolumn',text:"联合主键",dataIndex: 'compositeKeyFlag',flex:1,
+											renderer:function(val, m, rec,selected) {  
+										　　　　　　　　if (rec.get('compositeKeyFlag') == false)
+														return '<input type="checkbox" value="checkbox">';
+										             else{                 
+										                return (new Ext.grid.column.CheckColumn).renderer(val);
+										             }
+													return ;
+										         }
+										},
+										{  xtype: 'checkcolumn',text:"外键",dataIndex: 'foreignkeyflag',flex:1,id:'forei_key_id',
+											renderer:function(val, m, rec,selected) {  
+										　　　　　　　　if (rec.get('foreignkeyflag') == false){
+														return '<input type="checkbox" value="checkbox">';}
+										             else{                 
+										                return (new Ext.grid.column.CheckColumn).renderer(val);
+										             }
+													return ;
+										         }
+											
+										},
+										{ text:"外键连接",dataIndex: 'fkLink',id:'fkLink_ids',flex:2,
+											editor: {xtype:'combo',anchor:'95%',name:'fkLink',id:'fore_ids',maxLength:'100',
+												margin:'0 15 0 0',
+												store: me.proStore,editable:false,
+												queryMode:'local',displayField:'name',columnWidth:.3,
+												valueField:'id',
+												listConfig:{maxHeight:150},
+												listeners:{
+													select:function(combo, record,index){
+														var name=record.get('name');
+														Ext.getCmp('fore_ids').setValue(name);
+													}
+												}
+											}
+										}
+									]
+								,
+									listeners:{
+										//  将grid表格里的数据 传递给隐藏域，用逗号隔开 （因为是用select 进行选择，与需求有差别，所以在保存按钮那里会用
+										//        一个selectAll()来进行控制，这样，在点击保存的时候，保证能够让grid里的数据全部提交）
+										selectionchange:function( this1,selected,eOpts ){
+											var _columnName='';
+											var _classAttrName='';
+											var _readonly='';
+											var _primarykeyflag='';
+											var _compositeKeyFlag='';
+											var _foreignkeyflags='';
+											var _fkLink='';
+											for(var i = 0; i<selected.length; i ++) {
+												  var columnName = selected[i].data.columnName;
+												  var classAttrName = selected[i].data.classAttrName;
+												  var readonly = selected[i].data.readonly;
+												  var primarykeyflag = selected[i].data.primarykeyflag;
+												  var compositeKeyFlag = selected[i].data.compositeKeyFlag;
+												  var foreignkeyflag = selected[i].data.foreignkeyflag;
+												  var fkLink = selected[i].data.fkLink;
+												  _columnName +=columnName+',';
+												  _classAttrName +=classAttrName+',';
+												  _readonly +=readonly+',';
+												  _primarykeyflag +=primarykeyflag+',';
+												  _compositeKeyFlag +=compositeKeyFlag+',';
+												  _foreignkeyflags +=foreignkeyflag+',';
+												  _fkLink +=fkLink+',';
+											}
+											// 去掉末尾的逗号
+											if(_columnName.length>0){
+												_columnName=_columnName.substring(0,_columnName.length-1);
+											}
+											if(_classAttrName.length>0){
+												_classAttrName=_classAttrName.substring(0,_classAttrName.length-1);
+											}
+											if(_readonly.length>0){
+												_readonly=_readonly.substring(0,_readonly.length-1);
+											}
+											if(_primarykeyflag.length>0){
+												_primarykeyflag=_primarykeyflag.substring(0,_primarykeyflag.length-1);
+											}
+											if(_compositeKeyFlag.length>0){
+												_compositeKeyFlag=_compositeKeyFlag.substring(0,_compositeKeyFlag.length-1);
+											}
+											if(_foreignkeyflags.length>0){
+												_foreignkeyflags=_foreignkeyflags.substring(0,_foreignkeyflags.length-1);
+											}
+											if(_fkLink.length>0){
+												_fkLink=_fkLink.substring(0,_fkLink.length-1);
+											}
+											Ext.getCmp('_hiddenid_one').setValue(_columnName);
+											Ext.getCmp('_hiddenid_two').setValue(_classAttrName);
+											Ext.getCmp('_hiddenid_three').setValue(_readonly);
+											Ext.getCmp('_hiddenid_four').setValue(_primarykeyflag);
+											Ext.getCmp('_hiddenid_five').setValue(_compositeKeyFlag);
+											Ext.getCmp('_hiddenid_six').setValue(_foreignkeyflags);
+											Ext.getCmp('_hiddenid_seven').setValue(_fkLink);
+										}
+									 },
+							        tbar: [
+							               {
+							            text: '新增字段',
+							            handler : function() {
+							                // Create a model instance
+							                var r = Ext.create('Employee', {
+							                	columnName: '',
+							                	classAttrName: '',
+							                	readonly: '',
+							                	primarykeyflag: '',
+							                	compositeKeyFlag: '',
+							                	foreignkeyflag: '',
+							                	fkLink: ' '
+							                });
+							               
+							                _store.insert(0, r);
+							            }
+							        }, {
+							            text: '删除字段',
+							            handler:function(grid){
+											var selGrid = Ext.getCmp("proDefAdd_ids");
+				                    		var selections = selGrid.getSelectionModel().getSelection();
+				                    		var store = Ext.getCmp('proDefAdd_ids').getStore();
+				                    		var count=selections.length;
+											if(count==0){
+				                    			Ext.Msg.alert('系统提示','请最少选择一条记录！');
+				                    		}else{ Ext.Msg.confirm('系统提示','是否确定删除这'+count+'条记录？',function(btn){  
+						                        if(btn=='yes'){  
+						                    		if(count!=0){store.remove(selections);}
+						                    		
+						                        }
+						                    }); }
+							                    return ;
+							                } 
+							        }]
+								}
+							]
+							}
+        	    	],
+        	    	
+        	    	buttons:[
+    	         	    {text:'保存',action:'add',formBind:true,handler:function(){
+    	         	    	var grid = Ext.getCmp('proDefAdd_ids');
+    	         	    	grid.getSelectionModel().selectAll();
+    	         	    	me.close();
+    	         	    	}},      
+    	         	    {text:'取消',action:'cancel',handler:function(){me.close();}
+    	         	    }      
+    	         	],
+    	         	buttonAlign:'center'
+        	    }  
+        	]
+        });
+        me.callParent(arguments);
+    },
+    initStore:function(){
+    	var me = this;
+    	me.proStore = Ext.create('Ext.data.Store',{
+    		fields:["id","name"],
+    		proxy: {
+    			url: ctx+'/tableGroup/getTableGroupsByVersionId.action',
+	            type: 'ajax',
+	            reader: {
+	                type: 'json',
+	                successProperty: 'success',
+	                rootProperty: 'results',
+	                totalProperty : 'totalCount'
+	            }
+	        },
+	        autoLoad: true
+    	});
+    }
+}); 

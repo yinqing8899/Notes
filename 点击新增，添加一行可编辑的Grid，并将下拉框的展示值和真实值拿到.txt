@@ -1,0 +1,245 @@
+/**
+ * 系统管理--->系统参数--->条件选择器--->条款子句(新增)
+ * yinqing	2015-08-17
+ */
+Ext.define(appNameSpace+'.view.systemManager.selector.SelectorAtomAddView',{
+	extend:'Ext.window.Window',
+	width:500,
+	height:500,
+	resizable:false,modal:true,draggable:true,
+	title:'条款子句(新增)',
+	selector_selectorId:null,
+	initComponent:function(){
+		var me = this;
+		me.initFormPanel();
+		Ext.apply(me,{
+			layout: {
+                type: 'vbox',align: 'stretch'
+            },
+			items:[me.formPanel,me.gridPanel]
+		});
+		me.callParent();
+	},
+	
+	initFormPanel:function(){
+		var me = this;
+		Ext.define('Plant', {
+	        extend: 'Ext.data.Model',
+	        fields: [
+	            {name: 'paramName', type: 'string'},
+	            {name: 'operator', type: 'string'},
+	            {name: 'limit', type: 'string'}
+	        ]
+	    });
+		 var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
+		        clicksToEdit: 1
+		    });
+		  var rowEditing = Ext.create('Ext.grid.plugin.RowEditing', {
+		        clicksToMoveEditor: 1,
+		        saveBtnText: "保存",  
+	            cancelBtnText: "取消", 
+		        autoCancel: false
+		    });
+		 var store = Ext.create('Ext.data.Store', {
+		        // destroy the store if the grid is destroyed
+		        autoDestroy: true,
+		        model: 'Plant',
+		        proxy: {
+		            type: 'ajax',
+		            url: '',
+		            reader: {
+		                type: 'json',
+		                record: 'plant'
+		            }
+		        }
+		    });
+		me.formPanel = Ext.create('Ext.form.Panel',{
+			border:false,
+			name:'atom_formPanel_name',
+    		anchor:'100%',
+    		items:[
+    		     {xtype:'textfield',name:'atom_selectorName',fieldLabel:'选择器名称',anchor:'95%',readOnly:true,fieldStyle:'color:grey;',labelWidth:140,margin:'15 10 15 10'},
+    		     {xtype:'textfield',name:'atom_ruleName',fieldLabel:'规则条款名称',anchor:'95%',readOnly:true,fieldStyle:'color:grey;',labelWidth:140,margin:'15 10 15 10'},
+    		     {xtype:'textfield',name:'atom_groupId',fieldLabel:'子句组编号',anchor:'95%',readOnly:true,fieldStyle:'color:grey;',labelWidth:140,margin:'15 10 15 10'}
+    		],
+    		tbar:[
+    		     {text:'保存',action:'saveBtn',formBind:true},'-',
+    		     {text:'取消',action:'cancelBtn'}
+    		]
+		});
+		//获取变量名称的store
+		me.gridStore = Ext.create('Ext.data.Store',{
+       	 fields:['paramId','paramName'],
+		   proxy: {
+  			url: _path+'/systemmgr/selector/getSelectorParamList.do?selectorId='+me.selector_selectorId,
+	            type: 'ajax',
+	            reader: {
+	                type: 'json',
+	                successProperty: 'isSuccess',
+	                rootProperty: 'property',
+	                totalProperty : 'totalCount'
+	            }
+	    },
+	    autoLoad: true
+	   });
+		//获取运算符的store
+		me.operatorStore = Ext.create('Ext.data.Store',{
+			   fields:['bid','operator'],
+    		   proxy: {
+	    			url: _path+'/systemmgr/selector/getOperator.do',
+		            type: 'ajax',
+		            reader: {
+		                type: 'json',
+		                successProperty: 'isSuccess',
+		                rootProperty: 'property',
+		                totalProperty : 'totalCount'
+		            }
+		    },
+		    autoLoad: true
+    	   });
+		me.gridPanel = Ext.create('Ext.grid.Panel',{
+			name:'atomGrid',
+			store: store,
+			border:true,
+			selModel:{
+				mode:'SIMPLE',
+				allowDeselect:true
+			},
+	    	flex:1,
+			columns:[
+			       {header:'变量名称',dataIndex:'paramName',flex:2,
+			    	   renderer: function (value, metaData) {
+                           var index = me.gridStore.find('paramId', value);
+                           var record = me.gridStore.getAt(index);
+                           if (record == null) {
+                               return value;
+                           } else {
+                               return record.data.paramName;
+                           }
+                       }, 
+			    	   editor:new Ext.form.field.ComboBox({
+			    		   typeAhead: true,
+			    		   allowBlank: false,
+			    		   triggerAction: 'all',
+			    		   selectOnTab: true,
+			                store:me.gridStore,
+		    		       	   editable:false,
+							   queryMode: 'local',displayField: 'paramName',columnWidth:.3,
+							   valueField: 'paramId',
+							   emptyText:'请选择变量名称',
+							   listConfig:{maxHeight:150}
+			            })
+			       },
+			       {header:'运算符',dataIndex:'operator',flex:2,
+			    	   renderer: function (value, metaData) {
+                           var index = me.gridStore.find('bid', value);
+                           var record = me.gridStore.getAt(index);
+                           if (record == null) {
+                               return value;
+                           } else {
+                               return record.data.operator;
+                           }
+                       }, 
+			    	   editor:new Ext.form.field.ComboBox({
+			    		   typeAhead: true,
+			    		   allowBlank: false,
+			    		   triggerAction: 'all',
+			    		   selectOnTab: true,
+			    		   store:me.operatorStore,
+	    		       	   editable:false,
+						   queryMode: 'local',displayField: 'operator',columnWidth:.3,
+						  valueField: 'bid',
+						   emptyText:'请选择运算符',
+						   listConfig:{maxHeight:150}
+			    	   })
+			       },
+			       {header:'运算值',dataIndex:'limit',flex:2,
+			    	   
+			    	   editor: {
+			    		   typeAhead: true,
+			                allowBlank: false
+			            }
+			       },
+			       {
+			            xtype: 'actioncolumn',
+			            width:30,
+			            sortable: false,
+			            items: [{
+			            	 iconCls:'condition_selector_delete',
+					         tooltip: '删除',
+					         handler: function(grid, rowIndex, colIndex) {
+			                    store.removeAt(rowIndex); 
+			                }
+			            }]
+			        }
+			],
+			selModel: {
+	            selType: 'cellmodel'
+	        },
+			tbar: [{
+	            text: '添加',
+	            handler : function(){
+	                // Create a model instance
+	                var r = Ext.create('Plant', { 
+	                	paramName:'',
+	                	operator:'',
+	                	limit:''
+	                });
+	                store.insert(0, r);
+	                rowEditing.startEdit(0, 0);
+//	                cellEditing.startEdit(0, 0);
+//	                cellEditing.startEditByPosition({row: 0, column: 0});
+	            }
+	        }],
+	        plugins: [rowEditing]
+	        //////////////////////////////////////////////////////////////////////////////////////
+	        ,listeners:{
+	        	selectionchange:function(this1,selected,eOpts){
+	        		var variableparams = "";
+	        		console.log(selected);
+//	        		 for(i=0;i<selected.length;i++){
+//	        			var variableparams1 = selected[i].data.paramId;
+//	        			var variableparams2 = selected[i].data.paramName;
+//	        			var variableparams3 = selected[i].data.datatype;
+//	        			var variableparams4 = selected[i].data.remark;
+//	        			variableparams +=variableparams1+"@"+variableparams2+"@"+variableparams3+"@"+variableparams4+"&";
+//	        		 }
+//	        		 Ext.getCmp('variableParams_id').setValue(variableparams.substring(0,variableparams.length-1));
+	        	}
+	        }
+	        
+	        
+	        //////////////////////////////////////////////////////////////////////////////////////
+	        
+//	        ,
+//		plugins: [cellEditing]
+		});
+	}
+	
+});
+
+/////////////////////////////////////////
+第二种方法
+							var p = new Ext.data.Record({
+             	    	  			equipmentType:'1',
+             	    	  			equipmentId:'',
+             	    	  			tourName:'',
+             	    	  			lostDate:new Date()
+             	    	  		});
+             	    	  		store2.insert(0, p);
+             	    	  		grid.startEditing(0, 1);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

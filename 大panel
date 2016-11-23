@@ -1,0 +1,615 @@
+
+////图表功能实现
+
+Ext.define('app.portal_test.chart', {
+    extend: 'Ext.panel.Panel',
+    alias: 'widget.LPortalChart',
+    id:'ChartId',
+    layout: 'absolute',
+    autoScroll: true,
+    collapsible : true,//允许展开和收缩
+    requires: [
+        'Ext.panel.Panel',
+        'Ext.layout.container.Border',
+        'app.portal_test.chartzheone'
+    ],
+
+
+    initComponent: function () {
+        var zhe1 = Ext.create('app.portal_test.chartzheone');
+        var zhu1 = Ext.create('app.portal_test.chartzhuone');
+        var zhe2 = Ext.create('app.portal_test.chartzhetwo');
+        var zhu2 = Ext.create('app.portal_test.chartzhutwo');
+
+        /* 一级下拉列表的store*/
+        var store_111 = Ext.create('Ext.data.Store',{
+            fields: [
+                { name: 'name' },
+                { name: 'id'}
+            ],
+            proxy: {
+                type: 'ajax',
+                url:  '/javaData/EnergyAnalysis/SummaryChart/ConditionQuery',
+                reader: {
+                    type: 'json',
+                    root: 'data',
+                    totalProperty: 'totalCount'
+                }
+            },
+            autoLoad: true
+        });
+        var box_111 = Ext.create('Ext.form.field.ComboBox',{
+            id : 'box_111_Id',
+            //name:"",
+            //fieldLabel : '',
+            listConfig: {
+                loadMask:false
+            } ,
+            allowBlank : false,
+            emptyText : '分公司...',
+            triggerAction : 'all',
+            store :store_111,
+            displayField : 'name',
+            valueField:     'id',
+            queryModel: 'remote',
+            listeners:{
+                'select': function(combo, record, index){//选择当前下拉时候，加载下级数据，形成联动
+                    var Box222=Ext.getCmp("box_222_Id");
+                    Box222.clearValue();
+                    Box222.store.load();
+                    Box222.setDisabled(false);
+
+                }
+            }
+        });
+        var store_222 = Ext.create('Ext.data.Store',{
+            fields: [
+                { name: 'name' },
+                { name: 'id'}
+            ],
+            autoLoad: false,
+
+            proxy: {
+                type: "ajax",
+                url:  '/javaData/EnergyAnalysis/SummaryChart/ConditionQuery',
+                reader: {
+                    type: "json",
+                    root: "data"
+                }
+            }
+            ,
+            listeners: {
+                'beforeload': function(store, operation, eOpts){
+                    var parentId=Ext.getCmp('box_111_Id').getValue();
+
+                    var params = {
+                        parentId:parentId,
+                        level:2
+                    };
+                    Ext.apply(store.proxy.extraParams, params);
+                }
+            }
+
+        });
+        var box_222 = Ext.create('Ext.form.field.ComboBox',{
+            id : 'box_222_Id',
+            name:"",
+            listConfig: {
+                loadMask:false
+            } ,
+            fieldLabel : '',
+            allowBlank : false,
+            emptyText : '大区...',
+            triggerAction : 'all',
+            store : store_222,
+            displayField : 'name',
+            valueField:     'id',
+            queryModel: 'remote',
+            listeners:{
+                'select': function(combo, record, index){
+                    var Box333=Ext.getCmp("box_333_Id");
+                    Box333.clearValue();
+                    Box333.store.load();
+                    Box333.setDisabled(false);
+                }
+            }
+        });
+        var store_333 = Ext.create('Ext.data.Store',{
+            fields: [
+                { name: 'name' },
+                { name: 'id'}
+            ],
+            autoLoad: false,
+            proxy: {
+                type: "ajax",
+                url:  '/javaData/EnergyAnalysis/SummaryChart/ConditionQuery',
+                reader: {
+                    type: "json",
+                    root: "data"
+                }
+            }
+            ,
+            listeners: {
+                'beforeload': function(store, operation, eOpts){
+                    var parentId=Ext.getCmp('box_222_Id').getValue();
+                    var params = {
+                        parentId:parentId,
+                        level:3
+                    };
+                    Ext.apply(store.proxy.extraParams, params);
+                }
+            }
+
+        });
+        var box_333 = Ext.create('Ext.form.field.ComboBox',{
+            id : 'box_333_Id',
+            name:"",
+            listConfig: {
+                loadMask:false
+            } ,
+            fieldLabel : '',
+            allowBlank : false,
+            emptyText : '小区...',
+            triggerAction : 'all',
+            store : store_333,
+            displayField : 'name',
+            valueField:     'id',
+            queryModel: 'remote',
+            listeners:{
+                'select': function(combo, record, index){
+                    var Box444=Ext.getCmp("box_444_Id");
+                    Box444.clearValue();
+                    Box444.store.load();
+                    Box444.setDisabled(false);
+                }
+            }
+        });
+
+        var store_444 = Ext.create('Ext.data.Store',{
+            fields: [
+                { name: 'name' },
+                { name: 'id'}
+            ],
+            autoLoad: false,
+            proxy: {
+                type: "ajax",
+                url:  '/javaData/EnergyAnalysis/SummaryChart/ConditionQuery',
+                reader: {
+                    type: "json",
+                    root: "data"
+                }
+            }
+            ,
+            listeners: {
+                'beforeload': function(store, operation, eOpts){
+                    var parentId=Ext.getCmp('box_333_Id').getValue();
+                    var params = {
+                        parentId:parentId,
+                        level:4
+                    };
+                    Ext.apply(store.proxy.extraParams, params);
+                }
+            }
+
+        });
+        var box_444 = Ext.create('Ext.form.field.ComboBox',{
+            id : 'box_444_Id',
+            name:"",
+            listConfig: {
+                loadMask:false
+            } ,
+            fieldLabel : '',
+            allowBlank : false,
+            emptyText : '热源...',
+            triggerAction : 'all',
+            store : store_444,
+            displayField : 'name',
+            valueField:     'id',
+            queryModel: 'remote',
+            listeners:{
+                'select': function(combo, record, index){
+                    var Box555=Ext.getCmp("box_555_Id");
+                    Box555.clearValue();
+                    Box555.store.load();
+                    Box555.setDisabled(false);
+                }
+            }
+        });
+
+        var store_555 = Ext.create('Ext.data.Store',{
+            fields: [
+                { name: 'name' },
+                { name: 'id'}
+            ],
+            autoLoad: true,
+            //params:{nameId:nameId},
+            proxy: {
+                type: "ajax",
+                url:  '/javaData/EnergyAnalysis/SummaryChart/ConditionQuery',
+                reader: {
+                    type: "json",
+                    root: "data"
+                }
+            }
+            ,
+            listeners: {
+                'beforeload': function(store, operation, eOpts){
+                    var parentId=Ext.getCmp('box_444_Id').getValue();
+                    var params = {
+                        parentId:parentId,
+                        level:5
+                    };
+                    Ext.apply(store.proxy.extraParams, params);
+                }
+            }
+
+        });
+        var box_555 = Ext.create('Ext.form.field.ComboBox',{
+            id : 'box_555_Id',
+            name:'',
+            listConfig: {
+                loadMask:false
+            } ,
+            fieldLabel : '',
+            allowBlank : false,
+            emptyText : '供热单元...',
+            triggerAction : 'all',
+            store : store_555,
+            displayField : 'name',
+            valueField:     'id',
+            queryModel: 'remote',
+            listeners:{
+                'select': function(combo, record, index){
+                    var Box666=Ext.getCmp("box_666_Id");
+                    Box666.clearValue();
+                    Box666.store.load();
+                    Box666.setDisabled(false);
+
+                }
+            }
+        });
+
+        var store_666 = Ext.create('Ext.data.Store',{
+            fields: [
+                { name: 'name' },
+                { name: 'id'}
+            ],
+            autoLoad: true,
+            //params:{nameId:nameId},
+            proxy: {
+                type: "ajax",
+                url:  '/javaData/EnergyAnalysis/SummaryChart/ConditionQuery',
+                reader: {
+                    type: "json",
+                    root: "data"
+                }
+            }
+            ,
+            listeners: {
+                'beforeload': function(store, operation, eOpts){
+                    var parentId=Ext.getCmp('box_555_Id').getValue();
+                    var params = {
+                        parentId:parentId,
+                        level:6
+                    };
+                    Ext.apply(store.proxy.extraParams, params);
+                }
+            }
+
+        });
+        var box_666 = Ext.create('Ext.form.field.ComboBox',{
+            id : 'box_666_Id',
+            name:"",
+            width: 200,
+            multiSelect: true,
+            listConfig: {
+                loadMask:false
+            } ,
+            fieldLabel : '',
+            allowBlank : false,
+            emptyText : '数据点...',
+            triggerAction : 'all',
+            store : store_666,
+            displayField : 'name',
+            valueField:     'id',
+            queryModel: 'remote',
+            listeners:{
+                'select': function(combo, record, index,e){
+                    var newId="" ;
+                    for(var i=0;i<record.length;i++){
+                        var oldId = record[i].data.id;
+                        newId += oldId + ',';
+                    }
+                    var newStore = Ext.getCmp('store_zhe1_Id').getStore();
+                    Ext.getCmp('hiddenText_id').setValue(newId);
+                }
+            }
+        });
+
+        //Ext.Ajax.request({
+        //        url:  '/EnergyAnalysis/getTest',
+        //        //url: '/javaData/PortalTest/PortalTest/LPortal/getBoilerTemCurveChartData',
+        //        method: "GET",
+        //        async: false,
+        //        success: function (response, opts) {  //请求成功的回调函数
+        //            alert('请求成功!');
+        //            var respText = Ext.decode(response.responseText);
+        //            console.log('respText:'+respText);
+        //            newdata = respText;
+        //        },
+        //        failure: function () { // 请求失败的回调函数
+        //            alert('请求失败');
+        //        }
+        //});
+        var starttime = Ext.create("Ext.form.field.Date",{
+            fieldLabel: '起始时间',
+            labelWidth: 60,
+            width: 260,
+            allowBlank: false,
+            maxValue: new Date() ,
+            format: 'Y-m-d ',
+            name: 'dataStartChart',
+            id: 'dataStartChartId',
+            listeners:{
+                'select': function() {
+                    Ext.getCmp('dataStopChartId').setMinValue(Ext.getCmp('dataStartChartId').getValue());
+                }
+            }
+
+        });
+
+        var stoptime = Ext.create("Ext.form.field.Date",{
+            fieldLabel: '结束时间',
+            labelWidth: 60,
+            width: 260,
+            allowBlank: false,
+            maxValue: new Date() ,
+            format: 'Y-m-d',
+            name: 'dataStopChart',
+            id: 'dataStopChartId'
+
+        });
+        var torDay =  Ext.create('Ext.Button', {
+            text: '今天',
+            id:'torDay_Id',
+            handler: function() {
+                var torDay = new Date(new Date());
+                var torDays = Ext.Date.format(torDay,'Y-m-d');
+                Ext.getCmp('dataStartChartId').setValue(torDays);
+                Ext.getCmp('dataStopChartId').setValue(torDays);
+            }
+        })
+        var yestorDay =  Ext.create('Ext.Button', {
+            text: '昨天',
+            id:'ystDay_Id',
+            handler: function() {
+                var yesDay = new Date(new Date()-1*24*60*60*1000);
+                var yestDay = Ext.Date.format(yesDay,'Y-m-d');
+                Ext.getCmp('dataStartChartId').setValue(yestDay);
+                Ext.getCmp('dataStopChartId').setValue(yestDay);
+            }
+        })
+        var bThdDay =  Ext.create('Ext.Button', {
+            text: '三天',
+            id:'bThdDay_Id',
+            handler: function() {
+                var bThdDay = new Date(new Date()-2*24*60*60*1000);
+                var ThdDay = Ext.Date.format(bThdDay,'Y-m-d');
+                var torDay = new Date(new Date());
+                var torDays = Ext.Date.format(torDay,'Y-m-d');
+                Ext.getCmp('dataStartChartId').setValue(ThdDay);
+                Ext.getCmp('dataStopChartId').setValue(torDays);
+            }
+        })
+        var sevDay =  Ext.create('Ext.Button', {
+            text: '七天',
+            id:'sevDay_Id',
+            handler: function() {
+
+                Ext.getCmp()
+                //
+                //var sevDay = new Date(new Date()-6*24*60*60*1000);
+                //var sevDays = Ext.Date.format(sevDay,'Y-m-d');
+                //var torDay = new Date(new Date());
+                //var torDays = Ext.Date.format(torDay,'Y-m-d');
+                //Ext.getCmp('dataStartChartId').setValue(sevDays);
+                //Ext.getCmp('dataStopChartId').setValue(torDays);
+            }
+        })
+        var cSerach = Ext.create('Ext.Button', {
+            text: '查询',
+            id: 'searchPortal_Chart',
+            iconCls: 'fa fa-search fa-lblue',
+            handler: function() {
+
+                var bt = Ext.getCmp('dataStartChartId').getValue();
+                var nt = Ext.getCmp('dataStopChartId').getValue();
+
+
+                //var bt = Ext.getCmp('dataStartChartId').getValue();
+                var dt = new Date(bt);
+                var beginTime = Ext.Date.format(dt,'Y-m-d');
+                Ext.getCmp('beginTimeText_id').setValue(beginTime);
+                //
+                //var nt = Ext.getCmp('dataStopChartId').getValue();
+                var tn = new Date(nt);
+                var endTime = Ext.Date.format(tn,'Y-m-d');
+                Ext.getCmp('endTimeText_id').setValue(endTime);
+                var newdd = [];
+                var fieldsx = hiddenText.getValue();
+                var a = fieldsx.substring(0,fieldsx.length-1);
+                ///////////////////////////
+                //这里把选中的id的值给小paenl
+                Ext.getCmp('hidText_id').setValue(a);
+                /////////////////////////////
+                newdd.push( a.split(','));
+                var dd = [];
+                for(var i=0;i<newdd[0].length;i++){
+                    dd.push({type: 'line',
+                        highlight: false,
+                        tips: {    //鼠标移动到曲线图的点上时显示的提示信息，如图中11:52:30
+                            trackMouse: true,    //实时追踪鼠标
+                            width: 150,    //提示面板宽度
+                            height: 40,    //提示面板高度
+                            renderer: function(storeItem, item) {
+                                var time = item.value[0];
+                                var newTime = new Date(time); //就得到普通的时间了
+                                var _newtime = Ext.Date.format(newTime,'Y-m-d H:m:s');
+                                var newparams = item.value[1]
+                                this.setTitle('温度:'+newparams+'℃'+ '<br />时间:'+_newtime);
+                            }
+                        },
+                        axis: 'left',
+                        xField: 'time',
+                        yField: newdd[0][i],
+                        style: {
+                            opacity: 0.93
+                        }});
+
+                }
+
+                var series2 = dd;
+                var newchart=Ext.getCmp('store_zhe1_Id');
+                var newStore = newchart.getStore();
+                var newId = Ext.getCmp('hiddenText_id').getValue();
+                var newSeries = newchart.series;
+                var newAxes = newchart.axes;
+                newSeries.add(series2);
+                var newStore = newchart.getStore();
+                //========================================================
+
+                //========================================================
+
+                /*
+                 Ext.Ajax.request({
+                 params:{
+                 id:newId,
+                 beginTime:beginTime,
+                 endTime:endTime
+                 },
+                 url: '/javaData/EnergyAnalysis/SummaryChart/getTempGraphData',
+                 method: "GET",
+                 async: false,
+                 success: function (response, opts) {  //请求成功的回调函数
+                 var respText = Ext.decode(response.responseText);
+                 newStore.loadData(respText.data);
+                 },
+                 failure: function () { // 请求失败的回调函数
+                 alert('请求失败');
+                 }
+                 });
+                 console.log(newStore);
+                 */
+                arr0 = [];
+                Ext.Array.include(newdd,"time");
+                arr0 = Ext.Array.flatten(newdd);
+
+                var store_qu = Ext.create('Ext.data.Store', {
+                    //fields:[ 'time','23488','23529'],
+                    fields:arr0,
+                    data:[],
+                    proxy: {
+                        type: 'ajax',
+                        url: '/javaData/EnergyAnalysis/SummaryChart/getTempGraphData',
+                        reader: {
+                            type: 'json',
+                            root: 'data',
+                            totalProperty: 'totalCount'
+                        }
+                    },
+                    listeners:{
+
+                    },
+                    autoLoad: false
+                });
+                //Ext.getCmp('store_zhe1_Id').store = store_qu;
+                Ext.getCmp('store_zhe1_Id').bindStore(store_qu);
+                //Ext.getCmp('store_zhe1_Id').reconfigure(store_qu);
+                var nStore = Ext.getCmp('store_zhe1_Id').getStore();
+
+                nStore.load({
+                    params:{
+                        id:newId,
+                        beginTime:beginTime,
+                        endTime:endTime
+                    },
+                    callback: function(records, options, success){
+
+
+                    }
+                });
+            }
+
+        });
+
+        var hiddenText=Ext.create("Ext.form.TextField",{
+            id:"hiddenText_id",
+            hidden:true
+        });
+        var beginTimeText=Ext.create("Ext.form.TextField",{
+            id:"beginTimeText_id",
+            hidden:true
+        });
+        var endTimeText=Ext.create("Ext.form.TextField",{
+            id:"endTimeText_id",
+            hidden:true
+        });
+        var toolbarTop = Ext.create('Ext.toolbar.Toolbar', {
+            dock : 'top',
+            items : [ box_111,box_222,box_333, box_444,box_555,box_666]
+        });
+        var toolbarBottom = Ext.create('Ext.toolbar.Toolbar', {
+            style : {
+                borderTopWidth : '0px !important',
+                borderBottomWidth : '1px !important'
+            },
+            items : [starttime,stoptime,torDay,yestorDay,bThdDay,sevDay,cSerach,beginTimeText,endTimeText]
+        });
+
+        //====================================================
+        Ext.apply(this,{
+            //合并tbar和Bbar，使tbar 可以两行显示
+            dockedItems : [toolbarTop, hiddenText,toolbarBottom],
+            items: [{
+                //title: '折线图1',
+                xtype: 'panel',
+                items:zhe1,
+                width: 550,
+                height: 350,
+                x: 0,
+                y: 0
+
+            },{
+                // title: '柱状图1',
+                xtype: 'panel',
+                items:zhu1,
+                width: 550,
+                height: 350,
+                x: 560,
+                y: 0
+
+            },
+                {
+                    //title: '折线图2',
+                    xtype: 'panel',
+                    items:zhe2,
+                    width: 550,
+                    height: 350,
+                    x: 0,
+                    y: 355
+
+                },
+                {
+                    //title: '柱状图2',
+                    xtype: 'panel',
+                    items:zhu2,
+                    width: 550,
+                    height: 350,
+                    x: 560,
+                    y: 355
+                }
+            ]
+        });
+        this.callParent();
+    }
+})

@@ -1,0 +1,30 @@
+'起始时间： ' ,
+                    {
+                        xtype:'datefield',
+                        id:'group_gui_group_begin_time_t',
+                        width:110,
+                        grow:false,//大小是否可变
+                        emptyText:'0000-00-00',
+                        format:'Y-m-d',
+                        listeners:{
+                        	  'select': function(){
+								//拿到选中日期七天前的那天
+                        		  var nowss = new Date(Ext.getCmp('group_gui_group_begin_time_t').getValue()-7*24*60*60*1000);
+                        		  var aa = Ext.getCmp('group_gui_group_begin_time_t').getValue();
+                        		  console.log(nowss);
+								    //Extjs3 的日期转换格式
+                        		  console.log(aa.format('Y-m-d'));
+								  //Extjs4以上 是这样转换的  Ext.Date.format(aa,'Y-m-d');
+                        	      Ext.getCmp('group_gui_group_end_time_t').setMinValue(Ext.getCmp('group_gui_group_begin_time_t').getValue());
+                        	   }
+                        	} 
+
+                    },'<div style="margin-left:15px;">终止时间：</div> ' ,
+                    {
+                        xtype:'datefield',
+                        id:'group_gui_group_end_time_t',
+                        width:110,
+                        grow:false,//大小是否可变
+                        emptyText:'0000-00-00'
+
+                    }

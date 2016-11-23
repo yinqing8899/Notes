@@ -1,0 +1,12 @@
+encodeURI(encodeURI("需要传递的参数"))
+ 后台接收时
+ 也做一下转码
+ String value = request.getParameter("value");
+ String newValue = URLDecoder.decode(value,"UTF-8");//这个就是已经转成功的
+ 
+ 
+ 前台代码示例：
+ 
+ 	var newUrl=basePath + "//selUsersByParam.do?userName="+encodeURI(encodeURI(Ext.getCmp('system_user_id_c').getValue()))+
+    												'&name='+encodeURI(encodeURI(Ext.getCmp('system_user_name_c').getValue()))+
+    												'&institude='+Ext.getCmp('system_user_institude_c').getValue();

@@ -1,0 +1,54 @@
+						
+						
+						{xtype:'gridpanel',anchor:'95%',flex:1,id:"choice_Ids",name:'choice_names',height:200,width:'480',margin:'10 5 0 10',
+									store:Ext.create('Ext.data.Store',{
+										fields:["included","choiceValueId","choiceValue","choiceCode","choiceValueName","choiceOrder"],
+										sorters : [{
+									        property : 'choiceOrder', // 指定要排序的列索引
+									        direction : 'ASC' // DESC：降序，  ASC：增序
+									    }],
+										proxy:{
+											url:ctx+'/pvChoice/getEditableChoiceValues.action',
+											type:'ajax',
+											reader:{
+												type:'json',
+												successProperty:'success',
+												rootProperty:'results',
+												totalProperty:'totalCount'
+											}
+										}
+									}),
+									selModel:{
+										selType:'checkboxmodel',
+										mode:'SIMPLE'
+									},
+									columns: [
+									        { dataIndex: 'choiceValue',text:"选项值",flex:1},
+											{ dataIndex: 'choiceCode',text:"助记码",flex:1},
+										    { dataIndex: 'choiceValueName',text:"选项值名称",flex:1},
+										    { dataIndex: 'choiceOrder',text:"显示顺序",flex:1}
+									    ],
+									 listeners:{
+										selectionchange:function( this1,selected,eOpts ){
+											var choiceid_ids='';
+											var choiceOrder_ids='';
+											for(var i = 0; i<selected.length; i ++) {
+												  var choiceid = selected[i].data.choiceValueId;
+												  choiceid_ids +=choiceid+',';
+												  var new_choiceOrder= selected[i].data.choiceOrder;
+												  choiceOrder_ids +=new_choiceOrder+',';
+											}
+											if(choiceid_ids.length>0){
+												choiceid_ids=choiceid_ids.substring(0,choiceid_ids.length-1);
+											}
+											if(choiceOrder_ids.length>0){
+												choiceOrder_ids=choiceOrder_ids.substring(0,choiceOrder_ids.length-1);
+											}
+											Ext.getCmp('hidden_Id').setValue(choiceid_ids);
+											Ext.getCmp('hidden_order_Id').setValue(choiceOrder_ids);
+											
+										}
+									 }
+									
+								
+								} 

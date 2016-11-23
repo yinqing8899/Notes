@@ -1,0 +1,4 @@
+如题，要将一行值置灰，
+可用 disabled:true，但是这样一来，整行都置灰了，
+这个时候，可用readOnly:true,fieldStyle:'color:grey;', 来，保证该行只读的情况下，文本框里的数据也是灰色的
+如果用的是editable:false  的话，对于combo 下拉框来说，照样能够进行选择，

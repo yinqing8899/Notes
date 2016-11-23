@@ -1,0 +1,14 @@
+{text:'父Key',dataIndex:'parentKeyName',align:'center',
+					renderer:function(val){
+						if(!val)return val;
+						var _store = me.staStore;
+						var result = '';
+						_store.each(function(record){
+							if(record.get('choiceId')==val){
+								result = record.get('choiceKey');
+								return false;
+							}
+						});
+						return result;
+					}
+				}

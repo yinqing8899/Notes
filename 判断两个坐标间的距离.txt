@@ -1,0 +1,15 @@
+//判断两个坐标间的距离
+guideLat 、guideLng  是A的坐标
+latlng.lat()、latlng.lng()是B的坐标
+下面的方法是 计算B点距离A点有多远  （误差0.02%左右）
+function distanceFrom(latlng) {
+    var lat = [guideLat, latlng.lat()]
+    var lng = [guideLng, latlng.lng()]
+    var R = 6378137;
+    var dLat = (lat[1] - lat[0]) * Math.PI / 180;
+    var dLng = (lng[1] - lng[0]) * Math.PI / 180;
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat[0] * Math.PI / 180) * Math.cos(lat[1] * Math.PI / 180) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c;
+    return Math.round(d);
+}

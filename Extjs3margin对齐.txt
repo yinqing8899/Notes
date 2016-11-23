@@ -1,0 +1,12 @@
+<div style="margin-left:15px;">所属机构：</div> 
+
+ {
+                        xtype:'textfield',
+                        id:'guide_person_phone_id',
+                        width:120,
+                        vtype:'mobile',
+                        grow:false,//大小是否可变
+                        emptyText:"请输入手机号...",
+                        style:{marginRight:'15px'}
+
+                    }

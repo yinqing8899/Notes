@@ -1,0 +1,22 @@
+
+
+		colums:[
+		
+			{header:'测试',dataIndex:''}
+		],
+		listeners:{
+            	 "beforeedit" : function(iEventobj){
+	            	 var _col = iEventobj.column;//获取要编辑的列
+	            	 var _row = iEventobj.row;//获取要编辑的行
+	            	 		var eqType = iEventobj.record.data.equipmentType;
+	            	 		if(eqType==2){
+	            	 			  var col = iEventobj.column;//获取单元格的某列
+	            	              var row = iEventobj.row;//获取单元格的某行
+	            	              if(_col==2&&_row==row){
+	            	            	  return false;
+	            	              }
+	            	 		}else{
+	            	 			return true;
+	            	 		}
+	             	}
+             	}

@@ -1,0 +1,16 @@
+
+		View²ã
+
+				{name: 'need1',columnWidth:.10,xtype:'checkbox',
+					listeners:{
+						change:function(this1, newValue, oldValue, eOpts){
+							me.down('textfield[name=_p_packageName]').setDisabled(!newValue);
+						}}
+				},
+				{xtype:'textfield',fieldLabel:me._p_packageName,columnWidth:.90,
+					labelAlign:'left',name:'_p_packageName',disabled:true
+				} 
+				
+		Control²ã£º
+			var need1 = searchPanel.down('checkbox[name=need1]');//Ãû³Æ
+			if(need1.getValue()){params.name = searchPanel.down('textfield[name=_p_packageName]').getValue();}

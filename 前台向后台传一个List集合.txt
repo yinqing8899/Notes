@@ -1,0 +1,58 @@
+nextBtnFn:function(){
+		var me = this;
+		me.rowEditor.cancelEdit();
+		var url = _path+'/assetmgr/asset/assetDirectory/updateDirectory.do?actionCode=KDMCAC001010&actionWinCode=KDMCWS001010';
+		var assetList = [];
+		me.gridStore.each(function(record){
+			assetList.push({
+				keyId:record.get('keyId'),
+				bid:record.get('bid'),
+				assetcode:record.get('assetcode'),
+				shortname:record.get('shortname'),
+				markettype:record.get('markettype'),
+				csetDataMaintain:record.get('csetDataMaintain')?record.get('csetDataMaintain').dmDataType:'1',
+				oiid:record.get('csetDataMaintain')?record.get('csetDataMaintain').dmOriid:-1,
+				_types:record.get('_types')
+			});
+		});
+		if(assetList.length==0){
+			javaNExceptionMessage('请在列表中至少加入一条资产信息！');
+			return;
+		}
+		/**compare left and right grid store**/
+		for(var i=0;i<me.leftGridStore.getCount();i++){
+			var temp = me.leftGridStore.getAt(i); 
+			var deleteFlag =true;
+			var index = -1;
+			for(var j=0;j<assetList.length;j++){
+				var temp2 = assetList[j];
+				if(temp.data.keyId == temp2.keyId||temp2.oiid==temp.data.keyId){
+					deleteFlag = false;
+					index = j;
+					break;
+				}
+			}
+			if(deleteFlag){
+				if(index!=-1){assetList.splice(i,1);}
+				assetList.push({
+					keyId:temp.get('keyId'),
+					bid:temp.get('bid'),
+					assetcode:temp.get('assetcode'),
+					shortname:temp.get('shortname'),
+					markettype:temp.get('markettype'),
+					csetDataMaintain:temp.get('csetDataMaintain')?temp.get('csetDataMaintain').dmDataType:'1',
+					oiid:temp.get('keyId'),
+					_types:'DELETE'
+				});
+			}
+		}
+		
+		var params = {
+			assettype:me.down('combo[name=assettype]').getValue(),	
+			tfReal:me.down('combo[name=tfReal]').getValue(),	
+			abstractInfo:me.down('textarea[name=abstractInfo]').getValue(),	
+			assetList:Ext.encode(assetList),
+			raceFlag:0,
+			bid:assetList[0].bid,
+			nextType:null
+		};

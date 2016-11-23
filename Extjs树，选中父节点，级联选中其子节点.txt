@@ -1,0 +1,10 @@
+// 当选中父节点时，让其子节点相应选中
+               contacterTree.on('checkchange', function(node, checked) {   
+                node.expand();   
+                node.attributes.checked = checked;   
+                node.eachChild(function(child) {   
+                    child.ui.toggleCheck(checked);   
+                    child.attributes.checked = checked;   
+                    child.fireEvent('checkchange', child, checked);   
+                });   
+            }, contacterTree);    

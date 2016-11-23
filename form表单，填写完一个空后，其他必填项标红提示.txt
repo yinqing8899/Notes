@@ -1,0 +1,28 @@
+
+
+
+					me.formPanel = Ext.create('Ext.form.Panel',{
+										name:'infoView',
+										border:false,
+										anchor:'100%',
+										items:[
+											 {xtype:'textfield',name:'keyId',
+														listeners:{
+															change:function(){me.validNextBtn();}
+														}
+											 }
+										]
+									});
+									
+									
+									
+									
+									
+									
+									
+									
+				 //validNextBtn
+    validNextBtn:function(){
+    	var me = this;
+    	me.down('button[action=saveBtn]').setDisabled(!me.down('form[name=infoView]').getForm().isValid());
+    }

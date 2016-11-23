@@ -1,0 +1,27 @@
+myGrid.getColumnModel().setHidden(i,true);
+
+但到了4.0后，已经没有getColumnModel这个方法了，我们在Ext.panel.Table看到以下片段
+
+if (headerCtCfg instanceof Ext.grid.header.Container) {
+            me.headerCt = headerCtCfg;
+            me.headerCt.border = border;
+            me.columns = me.headerCt.items.items;
+}
+
+也就是grid.columns已经保存了所有的gridcolumn，不需要再去get了，呵呵
+
+结论：
+
+grid.columns[i].hide()/show()
+
+////////////
+条件增加一列
+ if(loginType==1){
+        	_columns.splice(6,0, {
+	        	header   : '所属旅行社', 
+	            width    : 75, 
+	            sortable : true,
+	            dataIndex: 'travelAgency' ,
+  			    align:'center'
+            });
+        }

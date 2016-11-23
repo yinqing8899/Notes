@@ -1,0 +1,30 @@
+
+Ajax 方式：
+			//先定义一个用于form提交的变量
+		var fd = new FormData();
+			//获取input=file 的fileId 
+		fd.append("file",$("#"+fileId).get(0).files[0]);
+			//如果还有其他参数的话 如下
+		fd.append("name":$("#"+nameId).val);  // appen()里面是两个参数 第一个是key  第二个是value
+			//Ajax提交
+		$.ajax({
+		       url:'',
+		       data:fd,
+		       type:'POST',
+		       processData: false,    //这个必须要的，Ajax 默认是true，是对data参数进行序列化处理  它会调用返回值:StringjQuery.param把{ width:1680, height:1050 }参数对象序列化为width=1680&height=1050这样的字符串。
+	                    contentType: false,	//这个也是必须要的，用于定义网络文件的类型和网页的编码，Ajax默认的是 text/html  
+		       success:function(resp){
+				
+		      }
+		});
+
+Extjs 方式  只需要在form 中 加两个参数  enctype  和 fileUpload  就行
+
+		var fs = new Ext.FormPanel({
+	        	 	bodyStyle:'background-color:#F2FAFD;',
+	        	 	border:false,
+	        	 	layout: "border", 
+	        	 	enctype:'multipart/form-data', //这个很重要
+	   		fileUpload: true,  //这个也加上
+			items:[]
+		})	  

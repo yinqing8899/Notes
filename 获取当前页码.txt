@@ -1,0 +1,17 @@
+  //获取当前页码(通过grid的id来获取)
+        var pageIndex = Ext.getCmp('cartable').getBottomToolbar().el.dom.getElementsByTagName("input")[0].value;
+
+
+//通过bbar的id来获取
+ bbar:new Ext.PagingToolbar({
+                pageSize:15,
+                store:this.store, //设置数据源
+                displayInfo: true,
+                displayMsg:"当前 {0}-{1} 条记录 /共 {2} 条记录",
+                emptyMsg: "无显示数据",
+                doRefresh:function(){  //bbar的刷新操作
+            	 	Ext.getCmp('gridId').getSelectionModel().clearSelections(true); //清空之前已选项
+            	 	drivingRobot_reLimit = this.getPageData().activePage;  //获取当前的页码
+	 	        	this.store.reload();
+	         	} 
+             })

@@ -1,0 +1,5 @@
+formpanel.getForm().items.eachKey(function(key,item){  
+  //console.log(item.fieldLabel)  
+  //item.setDisabled(true)  
+  item.el.dom.readOnly=true;  
+}) 

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+</head>
+<body>
+<div class="one">
+
+</div>
+<div class="two">
+
+</div>
+</body>
+</html>
+<script type="text/javascript">
+    if(document.body.addEventListener){//Firefox
+        document.body.addEventListener('DOMMouseScroll',scrollFunc);
+    }
+    document.body.onmousewheel=scrollFunc;//IE/Opera/Chrome/Safari
+    var allowScroll = true;
+    function scrollFunc(event) {
+        var type = event.type;
+        if (type == 'DOMMouseScroll' || type == 'mousewheel') {
+            event.delta = (event.wheelDelta) ? event.wheelDelta / 120 : -(event.detail || 0) / 3;
+        }
+        //alert(event.delta);
+        if (event.srcElement && !event.target) {
+            event.target = event.srcElement;
+        }
+        if (!event.preventDefault && event.returnValue !== undefined) {
+            event.preventDefault = function() {
+                event.returnValue = false;
+            };
+        }
+        /*
+         ......其他一些兼容性处理 */
+//        return event;
+        if(allowScroll){
+            scrollAction(event.delta);
+        }
+    };
+    function scrollAction(val){
+        allowScroll = false;
+        switch (val){
+            case 1:
+                $(".two").slideDown(1000,function(){
+                    allowScroll = true;
+                });
+                break;
+            case -1:
+                $(".two").slideUp(1000,function(){
+                    allowScroll = true;
+                });
+                break;
+        }
+    }
+</script>
+<style type="text/css">
+    .one{
+        background-color: wheat;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border: dotted;
+    }
+    .two{
+        background-color: lightgoldenrodyellow;
+        height: 200px;
+        width: 100%;
+        position: fixed;
+        z-index: 99;
+        bottom: 1px;
+        border: dashed #999999;
+        display: none;
+    }
+</style>

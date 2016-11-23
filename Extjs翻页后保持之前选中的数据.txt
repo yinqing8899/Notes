@@ -1,0 +1,91 @@
+第一步：定义记录选择选项变量:  //Extjs3
+    var collection=new Ext.util.MixedCollection();   
+	
+	注：还需要加一句//如果不加下面这个rowselect 和rowdeselect  那当页选中的数据，只要不再进行翻页，是无法加到 collection里面的
+	 var csm=new Ext.grid.CheckboxSelectionModel({
+			 listeners:{
+				 'rowselect':function(this1, rowIndex, record){
+				 	collection.add(record.get("id"),{id:record.get("id")});  
+				 },
+				 'rowdeselect':function(this1, rowIndex, record){
+					 collection.removeKey(record.get("id"));  
+				 }
+			 }
+		 }); 
+	
+第二步：在store的lisenters属性上添加两个event. 如下:
+		this.store.on('load',function(store,records,option){
+        	  var sm = Ext.getCmp('guide_enquip_table').getSelectionModel();  
+              store.each(function(rec) {  
+                  if (collection.containsKey(rec.get("id"))) {  
+                      sm.selectRecords([rec], true);  
+                  }  
+              }); 
+        });
+		
+		  this.store.on('beforeload',function(s,p){
+        	
+				 var sm = grid.getSelectionModel();  
+				s.each(function(rec) {  
+					if (sm.isSelected(rec)) {  
+						collection.add(rec.get("id"),{id:rec.get("id")});  
+					} else {  
+						collection.removeKey(rec.get("id"));  
+					}  
+				}); 
+			}
+			
+			
+			
+			Extjs4+
+第一步：首先定义一个保存选中记录的集合
+	var collection = new Ext.util.MixedCollection();
+
+第二步：定义选中记录的CheckboxModel
+	var sm = Ext.create('Ext.selection.CheckboxModel',{
+		//checkOnly:true,
+		multiSelect:true,//支持多选
+		listeners:{
+			'select':function(sm,colIndex,rowIndex){
+				var record = sm.getStore().getAt(rowIndex);
+				collection.add(record.get("id"),record.data);
+			},
+			'deselect':function(sm,colIndex,rowIndex){
+				var record = sm.getStore().getAt(rowIndex);
+				collection.remove(collection.get(record.get("id")));
+			}
+		}
+	});
+
+第三步：定义Store（这个请参考）监听beforeload 和 load事件
+	smStore.on('beforeload',function(store,option){
+		store.each(function(rec){
+			if(sm.isSelected(rec)){
+				collection.add(rec.get("id"),rec.data);
+			}else{
+				collection.remove(collection.get(rec.get("id")));
+				Ext.util.Observale.capture(sm,function(eventName){
+					if(eventName == "deselect"){//事件名称是deselect则返回false终止时间的执行
+						return false;
+					}
+				});
+			}
+		});
+	
+	});
+
+	smStore.on('load',function(store,records,option){
+		var total = store.getCount();
+		for(var i=0;i<total;i++){
+			var rec = store.getAt(i);
+			if(collection.containsKey(rec.get("id"))){
+				sm.select(i,true,false);
+			}
+		}
+	});
+	
+	第四步：在grid中引用sm
+		xtype:'grid',
+		autoScroll:true,
+		seleModel:sm,
+		columnLines:true

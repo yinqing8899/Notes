@@ -1,0 +1,7 @@
+在需要引进的JQuery的文件最后 加入如下代码：
+if ( typeof module === "object" && module && typeof module.exports === "object" ) {
+    module.exports = jQuery;} else {
+    if ( typeof define === "function" && define ) {
+        define( "jquery", [], function () { return jQuery; } );
+    }}if ( typeof window === "object" && typeof window.document === "object" ) {
+    window.jQuery = window.$ = jQuery;}

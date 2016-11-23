@@ -1,0 +1,19 @@
+  Ext.Ajax.request({
+	            url: _path+'/limitmgr/config/limitUserangeConfig/loadFolder.do',    
+	            method: "POST",
+	            async: false,   
+	            params: {},
+	            success: function(response, opts) {
+	            	var result = Ext.decode(response.responseText);
+	            	var rqdata = result.property[0];
+	            	var tempData = rqdata.split("#");
+	            	for(var i=0;i<tempData.length;i++){
+						var storekey = tempData[i].split("@")[0];
+			    		var storevalue = tempData[i].split("@")[1];
+			    		folderItems.push(
+			    				{'key':storekey,'folder':storevalue}
+			    		);
+					}
+	            }, //请求成功的回调函数
+	            failure: function() {  }  // 请求失败的回调函数
+	        });

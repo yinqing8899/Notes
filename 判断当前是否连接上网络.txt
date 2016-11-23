@@ -1,0 +1,6 @@
+			if(window.navigator.onLine==true){
+                            		   alert("已连接");
+                            		   }else{
+                            		   alert("未连接");
+
+                            		   }

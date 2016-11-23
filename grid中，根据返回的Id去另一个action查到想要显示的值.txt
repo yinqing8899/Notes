@@ -1,0 +1,84 @@
+columns: [
+	    		 {text:me.memberName,width:150,dataIndex:'membername',//机构简称
+	    			 //dmDataType 数状态，如果为1 则为临时数据，为0则为正式数据，临时数据在简称后加一个（临时）
+	    			 renderer:function(sprite, record, attributes, index, store){
+	    				if(attributes.data.csetDataMaintain.dmDataType==1){ return sprite+'(临时)'}
+	    				else if(attributes.data.csetDataMaintain.dmDataType==0){return sprite}
+	    				return sprite;
+	    			 }
+	    		 },
+	    		    
+	    		 {text:me.name,width:150,dataIndex:'name',hidden:true},//机构名称
+	    		 {text:me.institutionalAttributes,width:150,dataIndex:'institutionalAttributes',
+	    			 renderer: function (value, metaData) {
+                         var index = me.institutionalAttributesStore.find('key', value);
+                         var record = me.institutionalAttributesStore.getAt(index);
+                         if (record == null) {
+                             return value;
+                         } else {
+                             return record.data.value;
+                         }
+                     }
+	    		 }
+				 ]
+				 
+				 
+				 
+				 
+				 
+		 me.institutionalAttributesStore = Ext.create('Ext.data.Store',{
+        	fields:['key','value'],autoLoad:true,
+        	proxy: {
+	            type: 'ajax',
+	            url: _path+'/commonsdata/commonGetListDatas.do?listType=institutionalattributes',
+	            reader: {
+	                type: 'json',
+	                successProperty: 'isSuccess',
+	                rootProperty: 'property',
+	                totalProperty : 'totalCount'
+	            }
+	        },autoLoad:true
+	        });
+			
+			
+			
+			
+	columns:[
+			         //变量名称
+			       {header:me.paramNameText,dataIndex:'paramName',flex:2,
+			    	   renderer: function (value, metaData,record) {
+			    	
+			    		   if(value==null||value==""){
+				    			var store = me.gridStore;
+				    			var url = _path+'/systemmgr/selector/getSelectorParamList.do';
+				    			var params = {selectorId:me.selector_selectorId};
+				    			storeLoad(store,url,params,function(records,operation,success){
+				    				for(i=0;i<records.length;i++){
+				    						  if(records[i].data.paramId==record.get('paramId')){
+			                  						var name =records[i].data.paramName;
+			                  						record.set('paramId',name);
+			                  					}
+				    				}
+				    			});
+				    			return record.get('paramId');
+				    		   }else if(value!=""||value!=null){
+				    			 //获取运算符
+			                      var index = me.gridStore.find('paramId', value);
+			                      var params2 = me.gridStore.getAt(index);
+			                      return params2.data.paramName;
+				    		   }
+                       }, 
+			    	   editor:new Ext.form.field.ComboBox({
+			    		   typeAhead: true,
+			    		   allowBlank: false,
+			    		   triggerAction: 'all',
+			    		   selectOnTab: true,
+			                store:me.gridStore,
+		    		       	   editable:false,
+							   queryMode: 'local',displayField: 'paramName',columnWidth:.3,
+							   valueField: 'paramId',
+							   emptyText:'请选择变量名称',
+							   listConfig:{maxHeight:150}
+			            })
+			       },		
+			

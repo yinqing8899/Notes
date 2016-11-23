@@ -1,0 +1,41 @@
+
+		var collection=new Ext.util.MixedCollection(); 
+
+		var csm=new Ext.grid.CheckboxSelectionModel({
+    			 listeners:{
+    				 'rowselect':function(this1, rowIndex, record){
+    				 	collection.add(record.get("id"),{id:record.get("id")});  
+    				 },
+    				 'rowdeselect':function(this1, rowIndex, record){
+    					 collection.removeKey(record.get("id"));  
+    				 }
+    			 }
+    		 });
+
+
+
+		 var _columns = [
+	                      	           csm,
+		                        {
+		                            header   : '设备编号', 
+		                            width    : "30%", 
+		                            align    : 'center',
+		                            sortable : true,
+		                            width    : 121, 
+		                            dataIndex: 'id',
+		                            css : 'color: green;',
+		  	                      menuDisabled :true
+		                        }
+	                        ];
+
+
+
+ Ext.manager.guide_enquip.superclass.constructor.call(this,{ //对父类初始化                 
+        store: this.store, 
+        mode :'SIMPLE',
+        sm : csm,
+        columns: _columns,
+        viewConfig: {
+            forceFit: forceFitFlag,
+            emptyText: '系统中还没有任务'
+        }）；

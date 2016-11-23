@@ -1,0 +1,47 @@
+禁止浏览器在单击backspace键(退格键)时跳转页面（extjs,javascript） 
+
+Extjs  实现方式
+    //方法一  
+     var key = new Ext.KeyMap(document,{  
+      key: 8,  
+      fn: function(obj,e){  
+       var type = e.target.type;  
+       var readonly = e.target.readOnly;  
+       if(type != 'text' && type != 'textarea' && type != 'password'){  
+        //e.preventDefault();  
+        e.stopEvent();  
+       }  
+       else if(readonly){  
+        //e.preventDefault();  
+        e.stopEvent();  
+       }  
+      },  
+      scope: this  
+     });  
+    //方法二  
+      
+      
+      
+    Ext.getDoc().on('keydown',function(e){    
+        if(e.getKey() == 8 && e.getTarget().type =='text' && !e.getTarget().readOnly){    
+                
+        }else if(e.getKey() == 8 && e.getTarget().type =='textarea' && !e.getTarget().readOnly){     
+            
+        }else if(e.getKey() == 8){    
+            e.preventDefault();    
+        }    
+    });   
+	
+	
+	JavaScript实现方式
+	    function document.onkeydown()     
+    {     
+      if ((event.keyCode==8) ) //屏蔽退格删除键    
+      {     
+        if (window.event.srcElement.tagName.toUpperCase()!="INPUT" && window.event.srcElement.tagName.toUpperCase()!="TEXTAREA" && window.event.srcElement.tagName.toUpperCase()!="TEXT")    
+        {    
+          event.keyCode=0;     
+          event.returnValue=false;    
+        }     
+      }     
+    }    

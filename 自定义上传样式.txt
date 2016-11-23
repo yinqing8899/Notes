@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>易优游旅游服务平台</title>
+	
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <script type="text/javascript" src="./js/jquery-1.7.2.min.js" ></script>
+    <!--<link rel="stylesheet" type="text/css" href="./styles.css">-->
+
+	<style type="text/css">
+	.public{
+			height: 33px;
+	}
+	.thisform{
+		position: absolute;
+		top:13%;
+		left:38%;
+	}
+	textarea{
+	  vertical-align:top;
+	}
+	input{
+		height:30px;
+		width:266px;
+	}
+	select{
+		height:30px;
+		width:266px;
+	}
+	.public{
+		margin:5px;
+	}
+	#subBtn ,#cancelBtn{
+	    float: left;
+	    margin-top:50px;
+	    margin-left:5px;
+	    width:50px;
+	}
+	#imgVerifyCode{
+		height:30px;
+		width:120px;
+		vertical-align: middle;
+	}
+	</style>
+	<script type="text/javascript">
+		function changeVerifyCode() {
+			var date = new Date();
+			var time = date.getTime();
+			document.getElementById("imgVerifyCode").src = "/BeidouProject/appVerify/image?time="+time;
+		}
+		
+		function choiceFileFn(){
+			$('#installFileId').attr('accept',',.apk');
+			document.getElementById('installFileId').click(); 
+		}
+		$(function(){
+			 $("#installFileId").change(function(){  // 当 id 为 file 的对象发生变化时
+			         $("#ddsds").val($("#installFileId").val());  //将 #file 的值赋给 #a
+			 })
+		 })
+		</script>
+  </head>
+  
+  <body>
+  <form action="aaa.do " class="thisform" method="post" enctype="multipart/form-data"> 
+  					<div class="public tpType">
+					<span style="margin-right: 32px"><span style="color:red">*</span>类型</span>
+					<select name="type" id="selectType" required="required">
+						<option value="android">Android</option>
+						<option value="ios">iOS</option>
+					</select>
+  					</div>
+					<div class="public version">
+						<span style="margin-right: 16px"><span style="color:red">*</span>版本号</span>
+						<input type="text" name="version" required="required"/>
+					</div>
+					<div class="public verfifyCode">
+						<span style="margin-right: 16px"><span style="color:red">*</span>验证码</span>
+						<input type="text" name="verifyCode" required="required" style="width:120px;">
+						<img id="imgVerifyCode"  style="cursor:hand "  src="/BeidouProject/appVerify/image" onclick="changeVerifyCode()"><br/>
+					</div>
+					<div class="public updateDate">
+						<span style="margin-left:8px;">更新日期</span>
+						<input type="date" name="updateDate"/><br/>
+					</div>
+					<div class="public instollFile">
+							<span><span style="color:red">*</span>安装文件</span>
+						<input type="text" id="ddsds" required="required"/>
+						<button onclick="choiceFileFn()"> 浏览</button>
+					</div>
+							<input type="file"  hidden=true name="installFile" id="installFileId"  accept=".apk">
+					<div class="public updateContent ">
+						<span><span style="color:red">*</span>更新内容</span>
+						<textarea  cols="35" rows="5" name="updateContent" ></textarea><br/>
+					</div>
+					<div class="btn">
+						<input type="submit" value="提交" style="margin-left:245px;"  id="subBtn" />
+						<input type="reset" value="重置" id="cancelBtn"/>
+					</div>
+  </form>
+  </body>
+</html>
+
+
+Extjs 中 是这样的
+ 		var fs = new Ext.form.FormPanel({
+		   				border:false,  
+		   				bodyStyle:'background-color:#F2FAFD;',
+		   				enctype:'multipart/form-data', //这个很重要
+		   				fileUpload: true,  	          //这个也加上
+				       	items : [
+				       	         {
+				       	        	 xtype:'container',
+				       	        	 layout:'column',
+				       	        	 items:[
+				       	        	 	 {
+				       	        	 		 xtype:'label',
+				       	        	 		 text:'请选择文件',
+				       	        	 		style:{marginLeft:'15px',marginTop:'2px'}
+				       	        	 	 },
+				       	        	     {
+				       	        	 		 xtype:'textfield',
+				       	        	 		 name:'fileValue',
+				       	        	 		 anchor:'92%',
+				       	        	 		 width:330,
+				       	        	 		 style:{marginLeft:'15px'}
+				       	        	 	 },
+				       	        	 	 { 
+									       	border : false, 
+									       	style : 'padding-left:2px;', 
+									       	items : new Ext.Button({ 
+										       	text : '浏览...', 
+										       	handler : function() {
+												//这里是定义上传文件的类型
+									       			$('#guidePersonFileImport').attr('accept','application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+										       	 	fs.getForm().findField('file').el.dom.click(); 
+										       	} 
+									       	}) 
+									    },
+				       	        	 	{ 
+					       	                name:'file', 
+					       	                id : 'guidePersonFileImport',
+					       	                fieldLabel:'附件名称', 
+					       	                inputType:'file', 
+					       	                hidden : true, 
+					       	                anchor : "50%", 
+					       	                xtype:'textfield', 
+					       	                allowBlank:false ,
+						       	            listeners : { 
+												     render : function(f) { 
+													      Ext.EventManager.on(f.el.dom, 'change', function(file, files) { 
+														      	var value = fs.getForm().findField('file').getValue(); 
+														       fs.getForm().findField('fileValue').setValue(value); 
+													       }) 
+												       } 
+											       } 
+					       	              }
+				       	        	 ]}
+						]
+      });

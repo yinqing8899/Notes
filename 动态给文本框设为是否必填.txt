@@ -1,0 +1,1 @@
+Ext.getCmp('guide_sq_in_storage_startNo_id').allowBlank = true;

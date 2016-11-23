@@ -1,0 +1,24 @@
+ //对radiogroup中的某一个或几个按钮进行操作：2015-03-26
+ 
+ 
+ 
+				{xtype:'radiogroup',anchor:'95%',fieldLabel:'<span style="color:red;">*</span>是否级联',name:'',
+							  maxLength:'100',allowBlank:false,margin:'10 5 5 15',
+							  items:[
+								  {boxLabel:'是',inputValue:'Y',name:'primarykeyflag',checked:true},
+								  {boxLabel:'否',inputValue:'N',name:'primarykeyflag'}
+							  ],
+							  listeners:{
+        	    			 	  change:function( this1, newValue, oldValue, eOpts ){
+        	    			 			console.log(newValue);
+        	    			 			var _value = newValue.primarykeyflag;
+        	    			 			if(_value=='Y'){Ext.getCmp('key_ids').setVisible(true);}
+        	    			 			else{Ext.getCmp('key_ids').setVisible(false);}
+        	    			 	  }
+							  }
+        	    }
+				
+				//用listeners 对整个radiogroup进行监听，并使用change事件来进行操作（API中，radiogroup中没有select事件）
+					在API中，找到change，在其Events中选择change，如上所示，进行操作（change里，第一个参数是this，将this改为this1，避免冲突）。
+					console.log(newValue); 是为了看他在后台显示的是什么，打开页面f12，可以看到，显示的是 ==>Object {primarykeyflag: "Y"}<==
+					因此，就得到第14行的newValue.primarykeyflag 这个值

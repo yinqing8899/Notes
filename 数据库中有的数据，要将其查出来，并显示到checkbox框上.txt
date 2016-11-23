@@ -1,0 +1,26 @@
+Ext.getCmp('weekendRest_id').getForm().reset();
+    	var _store = Ext.getCmp('weekendRest_id').store;
+    	var params1 = {
+				calendarId:Ext.getCmp('_calendarId').getValue()	
+		};
+		var url1 = _path+'/doAction/systemmanage_calendar_SelectWeekholidayAction';
+		storeLoad(
+				_store,url1,params1,function(records, operation, success){
+					if(records!=""){
+						var newData = records[0].data;
+						var newDayofWeek = newData.dayofWeek;
+						var weekrestDate=Ext.getCmp('weekend_rest_date').items;
+						if (newDayofWeek.split) {
+							newDayofWeek = newDayofWeek.split(',');
+						}
+						for (var i = 0; i < newDayofWeek.length; i++) {
+							weekrestDate.each(function (c) {
+		        				if (c.inputValue == newDayofWeek[i]) {
+		        					c.setValue(true);
+		        				}
+		        			});
+						}
+					}else{}
+					
+					
+    	});

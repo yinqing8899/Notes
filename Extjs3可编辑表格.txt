@@ -1,0 +1,39 @@
+
+   var tourist_tab =  new Ext.grid.EditorGridPanel({
+	id:'save_tourist_choiceFamily_id',
+					bodyStyle:'background-color:#F2FAFD;',
+					multiSelect:true,
+					height:295,
+					store:store1,
+	//             
+					columns:[
+						{header: '¼ÒÈË¹ØÏµ',dataIndex: 'relationship', width: 100,
+													editor: new Ext.form.ComboBox({  
+														editable: false,  
+														displayField: "text",  
+														valueField: "id",  
+														mode: "local",  
+														triggerAction: "all",  
+														store: new Ext.data.SimpleStore({  
+															fields: ["id","text"],  
+															data: [
+																  ['1','¸¸Ç×'],['2','Ä¸Ç×'],
+																  ['3','¸ç¸ç'],['4','½ã½ã'],
+																  ['5','µÜµÜ'],['6','ÃÃÃÃ'],
+																  ['7','ÆäËû']
+															]  
+														})  
+													}),
+													renderer:function(val){
+														if(val==1){return '¸¸Ç×'}
+														if(val==2){return 'Ä¸Ç×'}
+														if(val==3){return '¸ç¸ç'}
+														if(val==4){return '½ã½ã'}
+														if(val==5){return 'µÜµÜ'}
+														if(val==6){return 'ÃÃÃÃ'}
+														if(val==7){return 'ÆäËû'}
+													}
+													
+												}
+						]
+})

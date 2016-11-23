@@ -1,0 +1,46 @@
+						listeners:{
+								   select:function(combo, record, index){
+								   	   var productid = record.get('productid');
+								   	   var combo_ = me.down('combo[name=version_Name]');
+								   	   var store_ = combo_.getStore();
+								   	   store_.load({
+								   		   	params: {
+								   		   		productId:productid
+											},    //参数
+									        callback: function(records, options, success){ 
+		//							                  Ext.Msg.alert('info', '加载完毕');
+									        },
+									        scope: store_, 
+									        add:false
+								   	   });
+							   	   }
+							   }
+							   
+							   
+							   隐藏下拉框的箭头用hideTrigger:true
+							   
+							 改变最又边下拉箭头的样式，在combo中加上
+							 triggerCls :'x-form-search-trigger',
+							 另外 triggerCls：文本框右侧的按钮样式，主要有4种：
+
+								x-form-clear-trigger     // the X icon  
+
+								x-form-search-trigger    // the magnifying glass icon  
+
+								x-form-trigger           // the down arrow (default for combobox) icon  
+
+								x-form-date-trigger      // the calendar icon (just in case) 
+								
+								如果换了图标 点击图标想要执行action
+								
+								Ext.create('Ext.form.ComboBox', {
+										fieldLabel: 'Choose State',
+										store: states,
+										queryMode: 'local',
+										displayField: 'name',
+										valueField: 'abbr',
+										 onTriggerClick: function() {
+											Ext.Msg.alert('Status', 'You clicked my trigger!');
+										},
+										renderTo: Ext.getBody()
+								});	

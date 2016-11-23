@@ -1,0 +1,28 @@
+													
+													//只能输入11个数字，超过不让输，汉字及其他也不让输入
+													{
+                                                    	xtype:'numberfield',
+                                                        fieldLabel: '&nbsp&nbsp;SIM卡号',
+                                                        name: 'phone',
+                                                        regex: /(^\d{11}$)/,
+	                                                    regexText:"SIM卡格式不正确",
+	                                                    emptyText :"请输入11位卡号...",
+                                                        id:'mobile_text_id',
+                                                        anchor:'92%',
+                                                        allowBlank:true,
+                                                        enableKeyEvents:true,
+	                                                    listeners:{
+	                                                    	keyup:function(src,evt){
+	                                                    		var val = src.getValue().toString().replace( /\D/g);
+	                                                    		src.setValue(val);
+	                                                    		var aa= Ext.getCmp('mobile_text_id').getValue();
+	                                                    		if(aa.toString().length>11){
+	                                                    			var bb = aa.toString().substring(0,11);
+	                                                    			src.setValue(bb);
+	                                                    		}
+	                                                    	}
+	                                                    }
+                                                    }
+													
+													
+													

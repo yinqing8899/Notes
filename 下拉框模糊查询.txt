@@ -1,0 +1,101 @@
+				
+				
+				{
+						                                        xtype　:　'combo',
+						                                        fieldLabel:'导游',
+						                                        id:'current_location_check_guide_id',
+//						                                        style:'border: 1px solid #D8D8D8;border-radius: 2px;',
+//						                                        columnWidth:.5,
+//						                                        anchor:'90%', 
+						                                        mode:'local',//本地
+						                                        store:combo_guider,
+						                                        typeAhead: false,
+						                                        minChars : 1,
+						                                    	forceSelection: false,//true 将选定值限定为列表中的值之一，false允许用户设置任意文本到该字段
+						                                        editable: true,//允许输入
+						                                        valueField:'name',
+						                                        displayField:'name',
+						                                        triggerAction: 'all',
+						                                        selectOnFocus:false,//true 要在焦点上立即选择该领域中的任何文本。只适用于当eidt=true（默认为false）。
+						                                        width:140,
+						                                        lazyInit:false,
+						                                        emptyText:"输入导游姓名...",
+						                                        listeners:{
+																//这里注释掉  要不然的话 每输入一个 就会被整个框全部全中
+//			                                    					'focus':{
+//								                                    		fn:function(e){
+//										                                    	e.expand();
+//										                                    	this.doQuery(this.allQuery, true);
+//										                                    	},
+//										                                    	buffer:200
+//								                                    	}
+////			                                    ,
+							                                            'beforequery' : function(e){
+								                                    		  var filterField = 'name';  //需进行模糊查询的字段
+								                                              var combo = e.combo;
+								                                              combo.collapse();
+								                                              if (!e.forceAll) {
+								                                                 var value = e.query;
+								                                                  if (value != null && value != '') {
+								                                                      combo.store.filterBy(function (record, id) {
+								                                                          var text = record.get(filterField);
+								                                                          if (text != null && text != "") {
+								                                                        	  if(text.indexOf(value) != -1){
+								                                                        			Ext.getCmp("current_location_check_guide_id").setValue(value);
+								                                                        	  }
+								                                                              // 用自己的过滤规则,如写正则式
+								                                                              return (text.indexOf(value) != -1);
+								                                                          }
+								                                                          else {
+								                                                             return false;
+								                                                          }
+								                                                      });
+								                                                  } else {
+								                                                      combo.store.clearFilter();
+								                                                  }
+								                                                  combo.onLoad(); //不加第一次会显示不出来  
+								                                                  combo.expand();
+								                                                  return false;
+								                                              }
+//							                                            		var combo = e.combo;
+//										                                        if(!e.forceAll){
+//											                                        var value = e.query;
+//											                                        combo.store.filterBy(function(record,id){
+//												                                        var text = record.get(combo.displayField);
+//												                                        return (text.indexOf(value)!=-1);
+//											                                        });
+//											                                        combo.expand();
+//											                                        combo.select(0, true);
+//											                                        return false;
+//										                                        }
+							                                              }
+					                                            }
+						                                    }
+
+===================================================================
+ enableKeyEvents:true,
+                    listeners:{
+                        beforequery : function(e) {
+                            var combo = e.combo;
+                            // alert(combo.list.)
+                            combo.collapse();
+                            if (!e.forceAll) {
+                                var value = e.query;
+                                if (value != null && value != '') {
+                                    combo.store.filterBy(function(record, id) {
+                                        var text = record.get('partner');
+                                        // 用自己的过滤规则,如写正则式
+                                        return (text.indexOf(value) != -1);
+                                    });
+
+                                } else {
+                                    combo.store.clearFilter();
+                                }
+                                combo.onLoad();//不加第一次会显示不出来
+                                combo.expand();
+                                return false;
+                            }
+                        },
+                        //change : onchangeValue
+
+                    }

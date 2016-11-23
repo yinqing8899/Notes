@@ -1,0 +1,12 @@
+
+Extjs英文版API:  
+		http://docs.sencha.com/extjs/4.0.7/
+		
+		中文版API
+		file:///F:/Ext4.1.0%E4%B8%AD%E6%96%87API/Ext4.1.0_Doc%E4%B8%AD%E6%96%87%E7%89%88_V1.0.0_Beta/index.html#!/api
+		
+		在线API文档
+		http://tool.oschina.net/apidocs/
+		
+		Extjs
+		http://docs.sencha.com/

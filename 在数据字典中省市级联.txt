@@ -1,0 +1,108 @@
+
+
+   var customer_city_store = new Ext.data.Store({
+        	fields:['pid','children'],autoLoad:true,
+        	proxy:{
+        		type:'ajax',
+        		url:'../data/city.json',
+        		reader:{
+        			type: 'json',
+        			root: 'totalRoot', 
+        			totalProperty:'totalCount'
+        		}
+        	}
+        });
+        var customer_citycombo_stores = new Ext.data.Store({
+        	fields:['id','pid','name'],autoLoad:true,
+        	proxy:{
+        		type:'ajax',
+        		url:'../data/citycombo.json',
+        		reader:{
+        			type: 'json',
+        			root: 'totalRoot', 
+        			totalProperty:'totalCount'
+        		}
+        	}
+        });
+        var customer_citycombo_store = new Ext.data.Store({
+        	fields:['id','pid','name'],autoLoad:true,
+        	proxy:{
+        		type:'ajax',
+        		url:'../data/citycombo.json',
+        		reader:{
+        			type: 'json',
+        			root: 'totalRoot', 
+        			totalProperty:'totalCount'
+        		}
+        	}
+        });
+//省份下拉
+var customer_provinceid_id = new Ext.form.ComboBox({
+    		   id : 'customer_provinceid_id',  
+    		   name:'customerInfo.province',	
+    		   fieldLabel : '&nbsp&nbsp;省份',
+    		   allowBlank : true,
+    		   emptyText : '请选择类型...',
+    		   triggerAction : 'all',
+    		   editable:false,
+    		   store : customer_provinceid_store, 
+    		   width: 350,
+    		   displayField : 'name',
+    		   valueField:     'pid',
+    		   queryMode : 'local',
+    			 listeners : { //监听该下拉列表的选择事件
+  	             'select' : function(combo, record, index,e) { 
+  	            	 	Ext.getCmp('customer_city_id').setDisabled(false);
+  	            	 	var combo_ = Ext.getCmp('customer_city_id');
+  	            	 	var prs = customer_citycombo_stores.data.items;
+  	            	 	var store_ = combo_.getStore();
+					   	combo_.clearValue();
+					   	store_.removeAll();
+  	            	 	var pid = record[0].data.pid;
+  	            	 	var children = [];
+						for(var i=0;i<prs.length;i++){
+							if(pid==prs[i].data.pid){
+								children.push({'id':prs[i].data.id,'name':prs[i].data.name});
+							}
+						}
+						store_.add(children);
+  	            }
+   	  		 }
+    		});
+			
+			//城市下拉
+			   var customer_city_id = new Ext.form.ComboBox({
+ 		   id : 'customer_city_id',  
+ 		   name:'customerInfo.city',	
+ 		   fieldLabel : '&nbsp&nbsp;市',
+ 		   disabled:true,
+ 		   allowBlank : true,
+ 		   emptyText : '请先选择省份...',
+ 		   triggerAction : 'all',
+ 		   editable:false,
+ 		   store : customer_citycombo_store, 
+ 		   width: 350,
+ 		   displayField : 'name',
+ 		   valueField:     'id',
+ 		   queryMode : 'local',
+ 		   listeners:{
+ 			  afterrender:function(this1,eOpts){
+ 			  }
+ 		   }
+ 		});
+		
+		
+		在编辑的control里 还应加上 不然 城市那里出现的是所有的
+		
+		  var pvid = Ext.getCmp('customer_provinceid_id').getValue();//省份的id
+			    	  var combo_ = Ext.getCmp('customer_city_id');
+	        	 	  var prs = customer_citycombo_stores.data.items;
+	        	 	  var store_ = combo_.getStore();
+				    	store_.removeAll();
+	        	 	 var children = [];
+					 for(var i=0;i<prs.length;i++){
+						 if(pvid==prs[i].data.pid){
+							 children.push({'id':prs[i].data.id,'name':prs[i].data.name});
+						 }
+					 }
+				 	store_.add(children);

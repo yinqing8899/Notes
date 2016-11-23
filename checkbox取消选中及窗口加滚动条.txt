@@ -1,0 +1,16 @@
+在checkboxmodel 中，如果想实现单机选中一条记录，再进行点击这一行时，取消选中，可用：
+
+selModel: {  
+    				selType:'checkboxmodel',
+    				mode:'SINGLE',
+    				allowDeselect:true
+    		 },
+			 
+			 
+			 
+			 
+			 
+			 
+			 
+autoscroll:true,
+bodyStyle : 'overflow-x:hidden; overflow-y:scroll',

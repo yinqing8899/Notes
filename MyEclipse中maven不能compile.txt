@@ -1,0 +1,1 @@
+window--->preference--->MyEclipse--->Maven4MyEclipse--->setting---将maven中config下 setting.xml文件选上就行。。。注意：这里面，还需要在 java---Installed JREs 中，选中jdk7

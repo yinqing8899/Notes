@@ -1,0 +1,137 @@
+	
+	
+	var url = _path+'/doAction/systemmanage_menumanage_SelectMenuTreeListAction?actionCode=KDMCAS008011&actionWinCode=KDMCWS008010';
+    	me.leftTreeStore = Ext.create('Ext.data.TreeStore', {
+    		fields: [
+    		    'keyid','bid','positionCode','menuName','menuJsClass','shortCutFlag','rootFlag','sort','remark'
+		    ],
+		    folderSort: true,autoLoad:true,
+		    proxy: {
+	            type: 'ajax',
+	            url: url,
+	            reader: {
+	                type: 'json',
+	                successProperty: 'actionResultFlag',
+	                rootProperty: 'actionResults.actionResults',
+	                totalProperty : 'totalCount'
+	            }
+	        },
+	        listeners:{
+	        	nodebeforeexpand:function( this1, eOpts ){
+	        		if(this1.id!='root'){
+	        			var _url = _path+'/doAction/systemmanage_menumanage_SelectMenuTreeListAction?actionCode=KDMCAS008011&actionWinCode=KDMCWS008010';
+	        			_url += '&keyid='+this1.data.keyid;
+	        			_url += '&positionCode='+this1.data.positionCode;
+	        			me.leftTreeStore.proxy.url = _url;
+	        		}
+	        	}
+	        }
+        });
+		me.leftTree = Ext.create('Ext.tree.Panel',{
+    		region:'west',width:300,name:'_leftTree',layout:'fit',
+    		collapsible: true,collapseMode:'mini',header:false,split:1,
+    		border:false,frame:false,rootVisible:false,columnLines:true,
+    		forceFit:true,
+    		 columns: [
+    		     {
+		            xtype: 'treecolumn',text: me.menuNameText,width: 200,sortable: true,
+		            dataIndex: 'menuName',locked: true,height:0,
+	    		 },
+	    		 {text:me.menuJSClassText,width:120,dataIndex:'menuJsClass'},
+	    		 {text:me.shortCutText,width:80,dataIndex:'shortCutFlag'},
+	    		 {text:me.quickText,width:80,dataIndex:'quickFlag'},
+	    		 {text:me.sortText,width:80,dataIndex:'sort'},
+	    		 {text:me.menuRemarkText,width:150,dataIndex:'remark'}
+	        ],
+            store: me.leftTreeStore,
+            tbar:[
+                {text:me.addBtnText,action:'_left_add'},'-',   
+                {text:me.updateBtnText,action:'_left_update',disabled:true},'-',   
+                {text:me.deleteBtnText,action:'_left_delete',disabled:true}
+            ],
+			
+			
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			
+			var url = _path+'/systemmgr/institution/selectSubInstitutionList.do?actionCode=KDMCAS001010&actionWinCode=KDMCWS001010&firstLoad=yes&positionCode=';
+    	me.treeStore = Ext.create('Ext.data.TreeStore', {
+    		fields: [
+    		    'keyId','positionCode','name','institutionType',
+    		    'rootFlag','dataRegionFlag','foldRegionFlag','cityid',
+    		    'cityName','status','remark','leaf','bid'
+		    ],
+		    sorters: 'positionCode',
+		    folderSort: true,autoLoad:true,
+		    proxy: {
+	            type: 'ajax',
+	            url: url,
+	            reader: {
+	                type: 'json',
+	                successProperty: 'isSuccess',
+	                rootProperty: 'property',
+	                totalProperty : 'totalCount'
+	            },
+	            getMethod:function(){return 'POST';}
+	        },
+	        listeners:{
+	        	nodebeforeexpand:function( this1, eOpts ){
+	        		if(this1.id!='root'){
+	        			var _url = _path+'/systemmgr/institution/selectSubInstitutionList.do?actionCode=KDMCAS001010&actionWinCode=KDMCWS001010&firstLoad=no&positionCode='+this1.data.positionCode;
+	        			me.treeStore.proxy.url = _url;
+	        		}
+	        	},
+	        	load:function( this1, records, successful, operation, node, eOpts ){
+	        		me.treeGrid.expandAll();
+	        	}
+	        }
+        });
+    	
+    	me.treeGrid = Ext.create('Ext.tree.Panel',{
+    		 useArrows: true,rootVisible: false,columnLines:true,
+    		 store: me.treeStore,multiSelect: true,
+    		 name:'treeView',rowLines:true,
+    		 region:'center',border:false,forceFit:true,
+    		 padding:2,
+    		 columns: [
+    		     {
+		            xtype: 'treecolumn',text: me.institution_nameText,width: 200,sortable: true,
+		            dataIndex: 'name',locked: true
+	    		 }, 
+//	    		 {text:me.institution_institutionIdText,width:120,dataIndex:'keyId'},
+	    		 {text:me.institution_institutionTypeText,width:120,dataIndex:'institutionType',
+	    			 renderer:function(val){
+	    				 if(val){
+	    					 var index = institutionTypes.find('key',val);
+	    					 if(index==-1){return val;}
+	    					 return institutionTypes.getAt(index).get('value');
+	    				 }
+	    				 return val;
+	    			 }
+	    		 },
+	    		 {text:me.institution_cityNameText,width:120,dataIndex:'cityName'},
+	    		 {text:me.institution_dataRegionFlagText,width:80,dataIndex:'dataRegionFlag',
+	    			 renderer:function(val){
+	    				 if(val=='Y'){return '是';}else if(val=='N'){return '否';}return val;
+	    			 }
+	    		 },
+	    		 {text:me.institution_foldRegionFlagText,width:80,dataIndex:'foldRegionFlag',
+	    			 renderer:function(val){
+	    				 if(val=='Y'){return '是';}else if(val=='N'){return '否';}return val;
+	    			 }
+	    		 },
+//	    		 {text:me.institution_cityIdText,width:80,dataIndex:'cityid'},
+	    		 {text:me.institution_statusText,width:80,dataIndex:'status',
+	    			 renderer:function(val){
+	    				 if(val){
+	    					 var index = statusStore.find('key',val);
+	    					 if(index==-1){return val;}
+	    					 return statusStore.getAt(index).get('value');
+	    				 }
+	    				 return val;
+	    			 }
+	    		 }
+	        ]
+    	});
+    	me.treeGrid.expandAll();

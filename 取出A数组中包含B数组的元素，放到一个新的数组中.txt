@@ -1,0 +1,17 @@
+
+						var ids = ['1','2','3'];
+						var tempIds = ['1','2','3'];
+						var tempIdss = [];
+							for(var i=0;i<ids.length;i++){
+								var isEquals=false;
+							    for(var j=0;j<tempIds.length;j++){
+							    	if(ids[i]==tempIds[j]){
+							            isEquals=true;
+							            break;
+							      }
+							    }
+							    if(!isEquals)
+						    	   {
+						    		tempIdss.push(ids[i]);
+						    	   }
+							}

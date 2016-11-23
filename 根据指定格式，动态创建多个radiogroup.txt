@@ -1,0 +1,104 @@
+/**
+ * 数据集列表，供运算参数编辑页面选择使用
+ * yinqing	2015-10-14
+ */
+Ext.define(appNameSpace+'.view.systemManager.limitmgr.DataSetList',{
+	extend:'Ext.window.Window',
+	width:600,height:400,resizable:false,modal:true,draggable:true,
+	title:'数据集列表',layout:'fit',
+	
+	initComponent:function(){
+		var me = this;
+		me.infoPanel();
+		Ext.apply(me,{
+			items:[me.formPanel],
+			tbar:{
+				items:[
+				      {text:'保存',action:'datasetSaveBtn',disabled:true},
+				      {text:'关闭',action:'datasetCloseBtn'}
+				]
+			}
+		})
+		
+		me.callParent(arguments);
+	},
+	
+	initRadiogroup:function(radioInfo){
+		var me = this;
+    	me.radioItems = [];
+    	if(!radioInfo){
+    		return ;
+    	}
+    	var radioInfos = radioInfo.split("#");
+    	for(var i=0;i<radioInfos.length;i++){
+    		var temp = radioInfos[i];
+    		var radioGroup = temp.split(";");
+    		var radioGroupLabel = radioGroup[0].split("@")[0];
+    		var radioGroupName = radioGroup[0].split("@")[1];
+    		var tempItems = [];
+    		for(var j=1;j<radioGroup.length-1;j++){
+    			var itemLabel=radioGroup[j].split("@")[0];
+    			var itemValue=radioGroup[j].split("@")[1];
+	    		tempItems.push({
+	    			boxLabel:itemLabel,name:radioGroupName,inputValue:itemValue
+	    		});
+    		}
+    		me.radioItems.push({
+    			xtype:'radiogroup',name:radioGroupName,fieldLabel:radioGroupLabel,columns: 3,vertical: true,
+    			items:tempItems,anchor:'98%',margin:'0 0 0 6',
+    			listeners:{
+    				change:function(  this1,  newValue,  oldValue,  eOpts ){
+    					me.validSelectFn(this1,newValue);
+    				}
+    			}
+    		});
+    	}
+	},
+	
+	validSelectFn:function(radioGroup,value){
+		var me = this;
+		if(JSON.stringify(value)=='{}'){
+			return;
+		}
+		for(var i=0;i<me.radioItems.length;i++){
+			var _group = me.radioItems[i];
+			var group = me.down('radiogroup[name='+_group.name+']');
+			if(group.name!=radioGroup.name){
+				group.reset();
+			}
+		}
+		me.down('button[action=datasetSaveBtn]').setDisabled(false);
+		
+		
+	//	var fLabel = radioGroup.fieldLabel;//放到数据集名称那里
+	//	var rgname = radioGroup.name;//放到数据集名称隐藏域
+	//	var rgValues = JSON.stringify(value);
+	//	var checkrg = rgValues.substring(rgValues.lastIndexOf(":")+1,rgValues.length-1).replace("\"","").replace("\"","");;
+	//	var rgitems = radioGroup.items.items;
+	///	me._callCtrl.down('textfield[name=formulaslist]').setValue(fLabel);
+	//	me._callCtrl.down('textfield[name=formulaslistId]').setValue(rgname);
+	//	
+	//	me._callCtrl.down('textfield[name=formulasId]').setValue(checkrg);
+	//	
+	//	for(var i=0;i<rgitems.length;i++){
+	//		if(checkrg==rgitems[i].inputValue&&rgname==rgitems[i].name){
+	//			me._callCtrl.down('textfield[name=formulas]').setValue(rgitems[i].boxLabel);
+	//		}
+	//		
+	//	}
+		
+	},
+	
+	infoPanel:function(){
+		var me = this;
+		var bb = '名称@name1;label1@value1;label2@value2;label3@value3#名称2@name2;label12@value12;label22@value22;label33@value33';
+       me.initRadiogroup(bb);
+		me.formPanel = Ext.create('Ext.form.Panel',{
+	            name:'infoView',
+	            autoScroll:true,layout:'anchor',
+				items:me.radioItems
+		});
+	}
+	
+	
+});

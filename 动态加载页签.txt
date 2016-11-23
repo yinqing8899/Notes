@@ -1,0 +1,62 @@
+ 
+ 
+			items:{
+					 xtype:'tabpanel',name:'mainTabPanel',activeTab:0,
+					 listeners:{
+						 tabchange:function(tabPanel, newCard, oldCard, eOpts){
+							 me.searchFn();
+						 },
+						 afterrender:function(this1,op){
+							me.searchFn();
+						 }
+					 },
+					 items:me.pageItems
+				 }
+				 
+				 
+				 
+				 
+	initPages:function(){
+    	var me = this;
+    	me.pageItems = [];
+    	var aa = 'initAssetInterestCal;initAssetCashstructure;initAssetOptione;initAssetIssuer;initAssetCreditRating';
+		me.pagesArr = aa.split(";");
+    	for(var i=0;i<me.pagesArr.length;i++){
+    		var page = me.pagesArr[i];
+    		var pageObj = eval('me.'+page+'()');
+    		me.pageItems.push(
+    		   pageObj	
+    		);
+    	}，
+		
+	initAssetIssuer:function(){
+    	var me = this;
+    	me.assetIssuer = Ext.create(appNameSpace+'.controller.asset.assetIssuer.IssuerCtrl',{
+    		_callerMainCtrl:me._callerMainCtrl,//主视图ctrl
+    		_callerMainView:me._callerMainView,//主视图view
+    	 	_callerMainArgs:me._callerMainArgs,//主视图选择的行记录
+    	 	_callerMainAssetId:me._callerMainAssetId,//主视图选中行keyid
+    	 	_callerDetailCtrl:me,
+    	 	_mode:me._mode,			//操作模式，add,update,check
+    	 	_bid:me._bid,			
+    	 	_assettype:me._assettype
+    	});
+    	return me.assetIssuer;
+    },
+    //assetCreditRating 资产信用评级变化信息
+    initAssetCreditRating:function(){
+    	var me = this;
+    	me.assetCreditRating = Ext.create(appNameSpace+'.controller.asset.assetCreditRating.CreditRatingCtrl',{
+    		_callerMainCtrl:me._callerMainCtrl,//主视图ctrl
+    		_callerMainView:me._callerMainView,//主视图view
+    	 	_callerMainArgs:me._callerMainArgs,//主视图选择的行记录
+    	 	_callerMainAssetId:me._callerMainAssetId,//主视图选中行keyid
+    	 	_callerDetailCtrl:me,
+    	 	_mode:me._mode,			//操作模式，add,update,check
+    	 	_bid:me._bid,			
+    	 	_assettype:me._assettype
+    	});
+    	return me.assetCreditRating;
+    },
+		
+	}

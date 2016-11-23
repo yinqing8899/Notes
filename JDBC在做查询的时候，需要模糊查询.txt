@@ -1,0 +1,56 @@
+
+			
+				StringBuffer SelectCounterpartySqlS = new StringBuffer();
+				SelectCounterpartySqlS.append("where 1 = 1 ");
+				
+				//这是直接在map里取数
+				String memberName = StringUtil.isNull(String.valueOf(paramMap.get("memberName")));
+				if(!memberName.equals("")){
+					SelectCounterpartySqlS.append(" AND MEMBERNAME like '%"+memberName+"%' ");
+				}
+				
+				//如果要在实体类里取  注：counterpartyDef 是实体类
+							//在实体类取数据的话，还得定义一下
+								CounterpartyDef counterpartyDef = new CounterpartyDef();
+								//BO里面封装的值 拷贝到institutionTreeStructure这个实体对象中(我们在bo这个map中传了一个id值)
+								Entity2Entity.entityCopy((Object) paramMap.get(CommonStatic.ENTITYKEY), counterpartyDef);
+								//其中，Entity2Entity
+				String keyId = Long.toString(counterpartyDef.getKeyId());;//主键ID
+				String bId =  counterpartyDef.getBId();;//业务主键ID
+				String memberName = (String)counterpartyDef.getMemberName();//机构简称
+				String name = (String)counterpartyDef.getName();//机构全称
+				
+				
+				String strSql = SelectCounterpartySqlS.toString();
+				
+				try{
+					
+					//调用pdb事务处理
+					List<Map<String, String>> result_01 = pDBAgentCommand.executeQuery(SelectCounterpartySql + strSql );
+				
+					List resultList_01 = new ArrayList();
+					Map tempMain_01 = null;
+					
+					if(result_01!=null&&result_01.size()!=0){
+						for(int j = 0; j<result_01.size(); j++){
+							Map<String,String> result = (Map<String,String>)result_01.get(j);
+							tempMain_01 = new HashMap();
+							tempMain_01.put("keyid", result.get("KEYID"));
+					
+				
+							resultList_01.add(tempMain_01);
+						}
+					
+					serviceResultMap.put("actionResults", resultList_01);
+					serviceResultMap.put("totalCount", resultList_01.size());
+					
+					
+				}}catch(Exception e){
+					e.printStackTrace();
+					getServiceException();
+				}
+		
+		// 环境变量装载    
+		defExInfoMap.put(CommonStatic.KEYID, bId);
+		defExInfoMap.put(CommonStatic.KEYID, memberName);
+		defExInfoMap.put(CommonStatic.KEYID, name);

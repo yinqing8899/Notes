@@ -1,0 +1,14 @@
+						{
+                            header   : 'ÂÃÐÐÉçÃû³Æ', 
+                            width    : 120, 
+                            sortable : true,
+                            dataIndex: 'name' ,
+            			    align:'center',
+            			    renderer: function(v, p, record, rowIndex, index, store){
+                        		var _count = store.getCount();
+                        		if(_count =='1'){
+                        			Ext.getCmp('total_group_gui').getSelectionModel().selectFirstRow();
+                        		}
+                        		return v;
+                        	}
+                        },

@@ -1,0 +1,29 @@
+/**
+ *    description:           获取GridPanel中当前页在分页中的位置
+ *    name:                  getStartIndex  
+ *    parameters: grid       - GridPanel对象                    pageSize   - GridPanel一页展现的记录条数
+ *    return:                GridPanel中当前页在分页中的位置  Nubmer，准确的说，应该是当前页的开始记录数 
+ */ 
+
+function getStartIndex(grid, pageSize)   {     
+
+    var pageIndex = grid.getBottomToolbar().el.dom.getElementsByTagName("input")[0].value;   //这个记录的是1 2 3 这样的页码  
+
+    return pageSize*(pageIndex-1); 
+
+    } 
+
+或者可以通过  
+grid.getBottomToolbar().cursor来获得当前页的第一条记录数的Number	//这个是指当前页第一条数据是多少，如 每页显示15条数据，一开始是0，翻到第二页，该数值为15
+
+ bbar:new Ext.PagingToolbar({ 
+	            id:'gridpage',
+	            pageSize:15, 
+	            store:this.store, 
+	            refreshText:'刷新' ,
+	            doRefresh:function(){  //这是操作刷新按钮的function
+		     	    current_position_reLimit = this.getPageData().activePage; //这个就是获取当前页码
+		     	    current_position_refreshClick = true;
+		        	this.store.reload();
+	        	}
+	        })

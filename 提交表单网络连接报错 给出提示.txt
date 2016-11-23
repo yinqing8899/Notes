@@ -1,0 +1,28 @@
+//Ajax提交方式 网络报错
+failure:function(response,eOpts){
+	if(response.statusText=="communication failure"){
+			Ext.Msg.show({
+				title: '提示',
+				icon: Ext.Msg.WARNING,
+				msg: '<div style="margin-left:25px;"><span style="color:red;">连接超时，请检查网络或重试!</span></div>',
+				width: 300,
+				buttons: Ext.Msg.OK
+			});
+	}
+	
+}
+
+
+//form表单提交方式 网络报错
+failure:function(form,action){
+	var _type = action.failureType;
+	if(_type=="connect"){
+		Ext.Msg.show({
+			title: '提示',
+			icon: Ext.Msg.WARNING,
+			msg: '<div style="margin-left:25px;"><span style="color:red;">连接超时，请检查网络或重试!</span></div>',
+			width: 300,
+			buttons: Ext.Msg.OK
+		});
+	}
+}

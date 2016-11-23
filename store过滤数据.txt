@@ -1,0 +1,13 @@
+
+首先按正常的store加载  autoLoad:true  其实过滤的话 所有的数据都是传过来的，只是展示的时候选择性的展示而已
+下面就是开始过滤了
+var filter = function(record, id){
+        	   if (record.get("type")=="1")
+        	      return false;
+        	   else
+        	      return true;
+        	};
+        	var onStoreLoad = function(store, records, options){
+        	   store.filterBy(filter);
+        	};
+    store.on("load",onStoreLoad);
