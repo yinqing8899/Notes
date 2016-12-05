@@ -1,0 +1,24 @@
+一、如果是在网上down的JQuery的话，需要进行封装才能用
+封装方法：
+define(function(){
+      //这里放jquery的源码
+      return $.noConflict();
+});
+
+二、Bootstrap也需要封装才能用，
+封装方法：
+define(function (require, exports, module) {
+    var jQuery = require('jquery');
+
+    // bootstrap.js源码
+
+});
+
+然后 写seajs 的config:
+seajs.config({
+	  base: "./",
+	  alias: {
+	    'jquery':'lib/jquery-seajs.min',  //注：这里定义的名字jquery  要和封装bootstrap里面 require()的一样 
+	    'bootstrap':'lib/bootstrap/js/bootstrap.js'
+	  }
+});
