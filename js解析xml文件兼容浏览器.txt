@@ -1,0 +1,125 @@
+readXML.js
+/***************** JS BEGIN *************/
+(function(){
+	var readXML = function(file){
+		this.xmlFile = file;
+	}
+	readXML.prototype = {
+		init:function(){
+			var xmlDoc; 
+            if (window.ActiveXObject) { 
+                xmlDoc = new ActiveXObject('Microsoft.XMLDOM');//IE浏览器 
+                xmlDoc.async = false; 
+                xmlDoc.load(this.xmlFile); 
+            } 
+            else if (isFirefox=navigator.userAgent.indexOf("Firefox")>0) { //火狐浏览器 
+//            else if (document.implementation && document.implementation.createDocument) {//这里主要是对谷歌浏览器进行处理 
+                xmlDoc = document.implementation.createDocument('', '', null); 
+                xmlDoc.async = false;//火狐浏览器这里必须要设置成false 要不然解析不出来
+                xmlDoc.load(this.xmlFile); 
+            } 
+            else{ //谷歌浏览器 
+              var xmlhttp = new window.XMLHttpRequest(); 
+                xmlhttp.open("GET",this.xmlFile,false); 
+                xmlhttp.send(null); 
+                if(xmlhttp.readyState == 4){ 
+                xmlDoc = xmlhttp.responseXML.documentElement; 
+                }  
+            } 
+            if (xmlDoc == null) { 
+                alert('CuPlayer.com提示：您的浏览器不支持xml文件读取,于是本页面禁止您的操作,推荐使用IE5.0以上可以解决此问题!'); 
+//              window.location.href = '../err.html'; 	
+				return false;
+   
+            }
+            return xmlDoc;
+		}
+	}
+	window.readXML = readXML;
+})()
+
+/***************** JS END *************/
+
+
+/***************** HTML BEGIN *************/
+调用方法：
+readXML.html:
+...
+	//首先引入readXML.js文件
+	<script src="js/readXml.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		var readXML = new readXML("text.xml");//传入xml文件路径
+		var xmlDoc = readXML.init();
+		
+//      var carArr = [];
+//      var obj = {};
+//		for (var i = 0; i < elements.length; i++) {
+//          var flag = elements[i].getAttribute("Flag");
+//          var angle = elements[i].getAttribute("Angle");    
+//          var dis = elements[i].getAttribute("Dis");
+//          carArr.push({
+//          	Flag:flag,
+//          	Angle:angle,
+//          	Dis:dis
+//          });
+//		}
+//		obj["Config"] = {
+//			"Width":elements[0].parentNode.getAttribute("Width"),
+//			"Length":elements[0].parentNode.getAttribute("Length"),
+//			"Name":elements[0].parentNode.getAttribute("Name"),
+//			"Point":carArr
+//		}
+//		console.log(obj)
+	</script>
+	
+	
+/***************** HTML BEGIN *************/
+
+
+
+
+
+/***************** XML文件 BEGIN *************/
+text.xml:
+
+<?xml version="1.0" encoding="utf-8" ?>
+<Config Width="1.69" Length="4.50" Name="爱丽舍">
+  <Point Flag="1" Angle="6.28319" Dis="1.919" />
+<Point Flag="2" Angle="6.08555" Dis="1.937" />
+<Point Flag="3" Angle="6.00181" Dis="1.920" />
+<Point Flag="4" Angle="5.89195" Dis="1.876" />
+<Point Flag="5" Angle="5.75852" Dis="1.632" />
+<Point Flag="6" Angle="5.22476" Dis="0.990" />
+<Point Flag="7" Angle="5.03798" Dis="1.067" />
+<Point Flag="8" Angle="5.14677" Dis="0.941" />
+<Point Flag="9" Angle="3.54206" Dis="2.009" />
+<Point Flag="10" Angle="3.45318" Dis="2.359" />
+<Point Flag="11" Angle="3.42296" Dis="2.399" />
+<Point Flag="12" Angle="3.33999" Dis="2.431" />
+<Point Flag="13" Angle="3.13689" Dis="2.425" />
+<Point Flag="14" Angle="2.93180" Dis="2.430" />
+<Point Flag="15" Angle="2.84587" Dis="2.409" />
+<Point Flag="16" Angle="2.81399" Dis="2.329" />
+<Point Flag="17" Angle="2.74113" Dis="2.009" />
+<Point Flag="18" Angle="1.13726" Dis="0.942" />
+<Point Flag="19" Angle="1.27048" Dis="1.015" />
+<Point Flag="20" Angle="1.05903" Dis="0.966" />
+<Point Flag="21" Angle="0.51630" Dis="1.626" />
+<Point Flag="22" Angle="0.38274" Dis="1.893" />
+<Point Flag="23" Angle="0.27642" Dis="1.936" />
+<Point Flag="24" Angle="0.19265" Dis="1.942" />
+<Point Flag="25" Angle="5.61294" Dis="1.318" />
+<Point Flag="26" Angle="5.73408" Dis="1.201" />
+<Point Flag="27" Angle="3.62717" Dis="1.707" />
+<Point Flag="28" Angle="3.52998" Dis="1.623" />
+<Point Flag="29" Angle="0.65336" Dis="1.326" />
+<Point Flag="30" Angle="0.53248" Dis="1.227" />
+<Point Flag="31" Angle="2.64252" Dis="1.690" />
+<Point Flag="32" Angle="2.75321" Dis="1.623" />
+</Config>
+
+/***************** xml BEGIN *************/
+	
+	
+	
+...
