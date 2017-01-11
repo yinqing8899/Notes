@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>将html保存为图片</title>
+		<style type="text/css">
+			body,html {
+				margin: 0;
+				padding: 0;
+				
+			}
+			#view {
+				background:url(img/HelloWorld.png) no-repeat;
+				width: 700px; height: 500px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="view">
+	        <input type="button" value="截图" onclick="takeScreenshot()">
+	    </div>
+		<script src="//cdn.bootcss.com/html2canvas/0.5.0-beta4/html2canvas.js"></script>
+		<script type="text/javascript">
+			function takeScreenshot() {
+			    html2canvas(document.getElementById('view'), {
+			        onrendered: function(canvas) {
+			        	console.log(canvas);
+			            document.body.appendChild(canvas);
+			        }
+			    }).then(function(canvas) {  
+	                 var imgUri = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"); // 获取生成的图片的url  
+	                 //如果要上传的话 直接上传这个地址
+//	                 window.location.href= imgUri; // 下载图片  
+	             });
+			}
+		</script>
+	</body>
+</html>
